@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getChatbotInsight } from "utilities/pulseApi";
 import InlineLoader from "components/common/InlineLoader";
+import AssistantResponse from "components/profile/AssistantResponse";
 
 interface Props {
     studentId: string;
@@ -33,9 +34,7 @@ export default function ChatbotInsightHero({ studentId }: Props) {
         <div className="insight-hero">
             <div className="oracle-badge">PulseAI Digital Assistant</div>
             <div className="oracle-name">Chatbot Insight</div>
-            <p className="insight-hero-text">
-                {loading ? "Generating insight..." : insight}
-            </p>
+            {loading ? <p className="insight-hero-text">Generating insight...</p> : <AssistantResponse text={insight} />}
             {loading && <InlineLoader label="Analyzing student trajectory..." />}
             <button className="btn-sm btn-primary" onClick={loadInsight} disabled={loading}>
                 {loading ? "Refreshing..." : "Refresh Insight"}

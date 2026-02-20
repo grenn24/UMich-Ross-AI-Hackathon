@@ -248,7 +248,15 @@ def chatbot_insight(body: dict):
     openai_prompt = (
         "You are an academic advisor assistant. Based on the student profile and user prompt, "
         "return ONLY valid compact JSON with keys: paragraph (string), graphData (array of exactly 3 objects). "
-        "Each graphData object must have: label (short string), value (integer 0-100).\n\n"
+        "Each graphData object must have: label (short string), value (integer 0-100).\n"
+        "The paragraph must be structured exactly with section headers and bullets:\n"
+        "Summary:\n"
+        "Key Drivers:\n"
+        "- item\n"
+        "- item\n"
+        "Recommended Actions:\n"
+        "- item\n"
+        "- item\n\n"
         f"Student name: {student['name']}\n"
         f"Risk level: {student['riskLevel']}\n"
         f"Pulse score: {student['pulseScore']}\n"
@@ -322,7 +330,15 @@ def stress_cause(student_id: str):
     latest = student.get("weeklyData", [])[-1] if student.get("weeklyData") else {"pressure": 0, "resilience": 0}
     prompt = (
         "Analyze student stress drivers and return ONLY valid JSON with keys: paragraph (string), "
-        "graphData (array with 3 objects {label, value}). Values must be 0-100 integers.\n\n"
+        "graphData (array with 3 objects {label, value}). Values must be 0-100 integers.\n"
+        "The paragraph must use this exact structure:\n"
+        "Summary:\n"
+        "Key Drivers:\n"
+        "- item\n"
+        "- item\n"
+        "Recommended Actions:\n"
+        "- item\n"
+        "- item\n\n"
         f"Student: {student['name']}\n"
         f"Risk level: {student['riskLevel']}\n"
         f"Pulse score: {student['pulseScore']}\n"
@@ -708,9 +724,10 @@ def _fallback_chatbot_insight(student: dict, prompt: str):
         {"label": "Sentiment Shift", "value": min(100, max(0, base - 8))},
     ]
     paragraph = (
-        f"Main stress pressure for {student['name']} appears driven by {student['topSignals'][0].lower()}. "
-        f"Given the prompt '{prompt}', the strongest near-term interventions are deadline smoothing and "
-        "a short advisor check-in to restore participation confidence."
+        f"Summary:\n{student['name']} is showing elevated stress pressure that needs near-term advisor support.\n"
+        f"Key Drivers:\n- {student['topSignals'][0]}\n- Engagement pattern decline in recent weeks\n"
+        f"Recommended Actions:\n- Run a 15-minute advisor check-in this week\n"
+        f"- Reduce deadline pressure and follow up on prompt context: {prompt}"
     )
     return {"graphData": graph, "paragraph": paragraph}
 

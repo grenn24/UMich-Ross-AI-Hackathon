@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getChatbotInsight } from "utilities/pulseApi";
 import InlineLoader from "components/common/InlineLoader";
+import AssistantResponse from "components/profile/AssistantResponse";
 
 interface Props {
     studentId: string;
@@ -73,7 +74,7 @@ export default function TrajectoryChart({ studentId }: Props) {
                 </div>
             )}
 
-            {answer && <p className="cause-paragraph">{answer}</p>}
+            {answer && <AssistantResponse text={answer} />}
         </div>
     );
 }

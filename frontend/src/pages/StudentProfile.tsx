@@ -55,8 +55,6 @@ export default function StudentProfile() {
 
     return (
         <section className="page-shell profile-wrap">
-            <button className="back-link" onClick={() => navigate("/")}>← Back to Dashboard</button>
-
             <ProfileHeader student={student} />
             <ChatbotInsightHero studentId={student.id} />
             <MetricsGrid student={student} />
