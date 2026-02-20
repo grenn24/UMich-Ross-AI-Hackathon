@@ -75,7 +75,7 @@ export default function AdvisorDashboard() {
                 <div className="page-hdr">
                     <div>
                         <h1 className="page-title">Student Wellness Dashboard</h1>
-                        <p className="page-sub">400 students - ECON Department - Advisor: Dr. Sarah Chen</p>
+                        <p className="page-sub">{counts.all} students · ECON Department · Advisor: Dr. Sarah Chen</p>
                     </div>
                     <div className="week-chip">Week 8 of 14 - Nov 14, 2024</div>
                 </div>

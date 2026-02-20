@@ -42,7 +42,6 @@ const Heatmap = () => {
     const cells = useMemo(() => {
         if (studentHeatmap.length > 0) {
             return studentHeatmap
-                .slice(0, 200)
                 .flatMap((student) =>
                     student.weeklyPressure.map((item) => ({
                         week: item.week,
