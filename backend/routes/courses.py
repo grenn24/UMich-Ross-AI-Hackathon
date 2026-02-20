@@ -25,7 +25,7 @@ def get_all_courses():
 
 @router.get("/{course_id}")
 def get_course(course_id: str):
-    """Full course detail including weekly pressure and Oracle recommendation."""
+    """Full course detail including weekly pressure and PulseAI recommendation."""
     course = COURSE_DATA.get(course_id.upper())
     if not course:
         raise HTTPException(status_code=404, detail=f"Course '{course_id}' not found.")
@@ -57,7 +57,7 @@ def get_course(course_id: str):
 
 @router.get("/{course_id}/recommendation")
 def get_recommendation(course_id: str):
-    """Return only the Oracle deadline redistribution recommendation for a course."""
+    """Return only the PulseAI deadline redistribution recommendation for a course."""
     course = COURSE_DATA.get(course_id.upper())
     if not course:
         raise HTTPException(status_code=404, detail=f"Course '{course_id}' not found.")
@@ -79,3 +79,4 @@ def _pressure_to_zone(pressure: int) -> str:
     if pressure >= 30:
         return "YELLOW"
     return "GREEN"
+

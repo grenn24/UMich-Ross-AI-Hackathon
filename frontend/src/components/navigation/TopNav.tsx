@@ -19,7 +19,7 @@ const TopNav = () => {
                     Pulse Visualization
                 </NavLink>
                 <NavLink to="/oracle" className={({ isActive }) => `tnav ${isActive ? "active" : ""}`}>
-                    Oracle AI Engine
+                    PulseAI Intelligence Studio
                 </NavLink>
             </div>
 

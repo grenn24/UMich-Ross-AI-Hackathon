@@ -41,7 +41,7 @@ Interactive docs auto-generated at: **http://localhost:8000/docs**
 
 ---
 
-### 🤖 Oracle AI — `/api/oracle`
+### PulseAI Intelligence API - `/api/oracle`
 | Method | Path | Description |
 |--------|------|-------------|
 | POST | `/api/oracle/analyze-language` | Score a single text block |
@@ -97,8 +97,8 @@ Or with manual overrides:
 | Method | Path | Description |
 |--------|------|-------------|
 | GET | `/api/courses/` | All courses with pressure summary |
-| GET | `/api/courses/{course_id}` | Full course detail + enrolled students + Oracle rec |
-| GET | `/api/courses/{course_id}/recommendation` | Oracle deadline redistribution recommendation only |
+| GET | `/api/courses/{course_id}` | Full course detail + enrolled students + PulseAI rec |
+| GET | `/api/courses/{course_id}/recommendation` | PulseAI deadline redistribution recommendation only |
 
 Available course IDs: `CS301`, `BUS210`
 
@@ -127,3 +127,4 @@ Pulse Score = resilience / (pressure + 1) * 100   [capped at 100]
 | Login Frequency | 15% |
 | Peer Interaction | 10% |
 | Grade Trajectory | 10% |
+

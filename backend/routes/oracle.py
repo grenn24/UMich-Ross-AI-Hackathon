@@ -10,12 +10,12 @@ router = APIRouter()
 openai_client = OpenAI()
 
 
-# ── Oracle AI Language ────────────────────────────────────────────────────────
+# ── PulseAI Narrative Intelligence ────────────────────────────────────────────────────────
 
 @router.post("/analyze-language")
 def analyze_language(body: dict):
     """
-    Oracle AI Language mock.
+    PulseAI Narrative Intelligence mock.
     Input:  { "text": str, "label": str (optional) }
     Output: Sentiment, complexity, curiosity, vitality scores + word/sentence breakdown.
     """
@@ -36,7 +36,7 @@ def analyze_language(body: dict):
 @router.post("/compare-language")
 def compare_language(body: dict):
     """
-    Oracle AI Language side-by-side comparison.
+    PulseAI Narrative Intelligence side-by-side comparison.
     Input:  { "week1": str, "current": str }
     Output: Scores for both + delta + degradation flag.
     """
@@ -87,12 +87,12 @@ def compare_student_language(student_id: str):
     }
 
 
-# ── Oracle Pulse Calculator ───────────────────────────────────────────────────
+# ── PulseAI Forecast Matrix ───────────────────────────────────────────────────
 
 @router.post("/calculate-pulse")
 def calculate_pulse_detailed(body: dict):
     """
-    Oracle ML Pulse Calculator mock — shows the weighted formula step by step.
+    PulseAI Aegis Pulse Index mock — shows the weighted formula step by step.
     Input: {
         "submissionTimeliness": 0-100,
         "postFrequency": 0-100,
@@ -145,12 +145,12 @@ def calculate_pulse_detailed(body: dict):
     }
 
 
-# ── Oracle Digital Assistant ──────────────────────────────────────────────────
+# ── PulseAI Concierge Copilot ──────────────────────────────────────────────────
 
 @router.post("/generate-draft")
 def generate_draft(body: dict):
     """
-    Oracle Digital Assistant mock — generates personalized outreach email.
+    PulseAI Concierge Copilot mock — generates personalized outreach email.
     Input:  { "studentId": str } OR full override fields.
     Output: Personalized email draft + metadata.
     """
@@ -435,12 +435,12 @@ def refine_draft(body: dict):
     }
 
 
-# ── Oracle Analytics ──────────────────────────────────────────────────────────
+# ── PulseAI Insight Analytics ──────────────────────────────────────────────────────────
 
 @router.get("/university-heatmap")
 def university_heatmap():
     """
-    Oracle Analytics Cloud mock — university-wide wellness heatmap.
+    PulseAI Insight Analytics Cloud mock — university-wide wellness heatmap.
     Returns course-level aggregate Pulse Scores by week.
     """
     from mock_data import COURSE_DATA
@@ -495,7 +495,7 @@ def university_heatmap():
 @router.get("/showcase/{student_id}")
 def oracle_showcase(student_id: str):
     """
-    Composite payload for Oracle Engine screen cards.
+    Composite payload for PulseAI Intelligence Studio screen cards.
     Returns static-backed, student-specific blocks mirroring the demo UI.
     """
     student = next((s for s in STUDENTS if s["id"] == student_id), None)
@@ -508,7 +508,7 @@ def oracle_showcase(student_id: str):
     return {
         "studentId": student_id,
         "languageService": {
-            "badge": "Oracle AI Language Service",
+            "badge": "PulseAI SignalSense Studio",
             "title": "Linguistic Vitality Analysis",
             "description": "NLP on Canvas discussion post text",
             "input": student.get("currentPost", ""),
@@ -524,7 +524,7 @@ def oracle_showcase(student_id: str):
             "processingLabel": "Processing NLP analysis...",
         },
         "mlService": {
-            "badge": "Oracle ML Services",
+            "badge": "PulseAI Forecast Matrix",
             "title": "Pulse Score Calculator",
             "description": "Pressure / Resilience ratio model",
             "formulaText": f"Pulse = ( Resilience ÷ Pressure ) × 100 = ( {resilience_score} ÷ {pressure_score} ) × 100 = 26",
@@ -544,7 +544,7 @@ def oracle_showcase(student_id: str):
             },
         },
         "databaseService": {
-            "badge": "Oracle Autonomous Database",
+            "badge": "PulseAI Chronicle Vault",
             "title": "Behavioral Fingerprint",
             "description": "Personal baseline vs. current deviation",
             "baselineLabel": f"{student['name'].split()[0]} — Week 1-3 Baseline",
@@ -553,7 +553,7 @@ def oracle_showcase(student_id: str):
             "deviation": student.get("behavioralDeviation", {}),
         },
         "assistantService": {
-            "badge": "Oracle Digital Assistant",
+            "badge": "PulseAI Concierge Copilot",
             "title": "Personalized Outreach",
             "description": "Context-aware email generation",
             "context": [
@@ -730,3 +730,5 @@ def _meta(
         "fallbackReason": fallback_reason,
         "latencyMs": int((time.perf_counter() - started_at) * 1000),
     }
+
+
