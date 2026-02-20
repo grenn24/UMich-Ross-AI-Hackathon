@@ -4,7 +4,7 @@ import os
 import time
 import uuid
 from openai import OpenAI
-from mock_data import STUDENTS
+from mock_data import get_course_data, get_students
 
 router = APIRouter()
 openai_client = OpenAI()
@@ -67,7 +67,8 @@ def compare_student_language(student_id: str):
     Convenience endpoint: compare a specific student's Week 1 vs current post
     using their pre-stored posts in mock data.
     """
-    student = next((s for s in STUDENTS if s["id"] == student_id), None)
+    students = get_students()
+    student = next((s for s in students if s["id"] == student_id), None)
     if not student:
         raise HTTPException(status_code=404, detail=f"Student '{student_id}' not found.")
 
@@ -159,7 +160,8 @@ def generate_draft(body: dict):
     student = None
 
     if student_id:
-        student = next((s for s in STUDENTS if s["id"] == student_id), None)
+        students = get_students()
+        student = next((s for s in students if s["id"] == student_id), None)
         if not student:
             raise HTTPException(status_code=404, detail=f"Student '{student_id}' not found.")
 
@@ -240,7 +242,8 @@ def chatbot_insight(body: dict):
     if not prompt:
         raise HTTPException(status_code=400, detail="'prompt' field is required.")
 
-    student = next((s for s in STUDENTS if s["id"] == student_id), None)
+    students = get_students()
+    student = next((s for s in students if s["id"] == student_id), None)
     if not student:
         raise HTTPException(status_code=404, detail=f"Student '{student_id}' not found.")
 
@@ -315,7 +318,8 @@ def stress_cause(student_id: str):
     AI-generated stress-cause summary + graph based on real student stress scores.
     """
     start_time = time.perf_counter()
-    student = next((s for s in STUDENTS if s["id"] == student_id), None)
+    students = get_students()
+    student = next((s for s in students if s["id"] == student_id), None)
     if not student:
         raise HTTPException(status_code=404, detail=f"Student '{student_id}' not found.")
 
@@ -393,7 +397,8 @@ def refine_draft(body: dict):
     if not instruction:
         raise HTTPException(status_code=400, detail="'instruction' field is required.")
 
-    student = next((s for s in STUDENTS if s["id"] == student_id), None)
+    students = get_students()
+    student = next((s for s in students if s["id"] == student_id), None)
     if not student:
         raise HTTPException(status_code=404, detail=f"Student '{student_id}' not found.")
 
@@ -443,10 +448,10 @@ def university_heatmap():
     Oracle Analytics Cloud mock — university-wide wellness heatmap.
     Returns course-level aggregate Pulse Scores by week.
     """
-    from mock_data import COURSE_DATA
-
+    students = get_students()
+    course_data = get_course_data()
     heatmap = {}
-    for course_id, course in COURSE_DATA.items():
+    for course_id, course in course_data.items():
         heatmap[course_id] = {
             "courseName": course["name"],
             "weeklyPressure": [
@@ -459,10 +464,10 @@ def university_heatmap():
             ]
         }
 
-    # Student-level heatmap rows for visualization page (target: 200 students x 14 weeks)
+    # Student-level heatmap rows for visualization page (all students x 14 weeks)
     student_rows = []
-    for i in range(200):
-        student = STUDENTS[i % len(STUDENTS)]
+    for i in range(len(students)):
+        student = students[i % len(students)]
         weekly = student.get("weeklyData", [])
         by_week = {row["week"]: row for row in weekly}
         row_values = []
@@ -498,7 +503,8 @@ def oracle_showcase(student_id: str):
     Composite payload for Oracle Engine screen cards.
     Returns static-backed, student-specific blocks mirroring the demo UI.
     """
-    student = next((s for s in STUDENTS if s["id"] == student_id), None)
+    students = get_students()
+    student = next((s for s in students if s["id"] == student_id), None)
     if not student:
         raise HTTPException(status_code=404, detail=f"Student '{student_id}' not found.")
 

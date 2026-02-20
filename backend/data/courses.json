@@ -1,0 +1,1070 @@
+{
+  "ECON401": {
+    "name": "ECON 401 \u2014 Advanced Macro",
+    "professor": "Prof. Johnson",
+    "weeklyPressure": [
+      {
+        "week": 1,
+        "pressure": 30,
+        "deadlines": 1,
+        "assignments": [
+          "Week 1 Deliverable 1"
+        ]
+      },
+      {
+        "week": 2,
+        "pressure": 38,
+        "deadlines": 1,
+        "assignments": [
+          "Week 2 Deliverable 1"
+        ]
+      },
+      {
+        "week": 3,
+        "pressure": 44,
+        "deadlines": 2,
+        "assignments": [
+          "Week 3 Deliverable 1",
+          "Week 3 Deliverable 2"
+        ]
+      },
+      {
+        "week": 4,
+        "pressure": 52,
+        "deadlines": 2,
+        "assignments": [
+          "Week 4 Deliverable 1",
+          "Week 4 Deliverable 2"
+        ]
+      },
+      {
+        "week": 5,
+        "pressure": 60,
+        "deadlines": 2,
+        "assignments": [
+          "Week 5 Deliverable 1",
+          "Week 5 Deliverable 2"
+        ]
+      },
+      {
+        "week": 6,
+        "pressure": 67,
+        "deadlines": 3,
+        "assignments": [
+          "Week 6 Deliverable 1",
+          "Week 6 Deliverable 2",
+          "Week 6 Deliverable 3"
+        ]
+      },
+      {
+        "week": 7,
+        "pressure": 79,
+        "deadlines": 3,
+        "assignments": [
+          "Week 7 Deliverable 1",
+          "Week 7 Deliverable 2",
+          "Week 7 Deliverable 3"
+        ]
+      },
+      {
+        "week": 8,
+        "pressure": 87,
+        "deadlines": 4,
+        "assignments": [
+          "Week 8 Deliverable 1",
+          "Week 8 Deliverable 2",
+          "Week 8 Deliverable 3",
+          "Week 8 Deliverable 4"
+        ]
+      },
+      {
+        "week": 9,
+        "pressure": 70,
+        "deadlines": 2,
+        "assignments": [
+          "Week 9 Deliverable 1",
+          "Week 9 Deliverable 2"
+        ]
+      },
+      {
+        "week": 10,
+        "pressure": 64,
+        "deadlines": 2,
+        "assignments": [
+          "Week 10 Deliverable 1",
+          "Week 10 Deliverable 2"
+        ]
+      },
+      {
+        "week": 11,
+        "pressure": 58,
+        "deadlines": 1,
+        "assignments": [
+          "Week 11 Deliverable 1"
+        ]
+      },
+      {
+        "week": 12,
+        "pressure": 63,
+        "deadlines": 2,
+        "assignments": [
+          "Week 12 Deliverable 1",
+          "Week 12 Deliverable 2"
+        ]
+      },
+      {
+        "week": 13,
+        "pressure": 75,
+        "deadlines": 3,
+        "assignments": [
+          "Week 13 Deliverable 1",
+          "Week 13 Deliverable 2",
+          "Week 13 Deliverable 3"
+        ]
+      },
+      {
+        "week": 14,
+        "pressure": 82,
+        "deadlines": 3,
+        "assignments": [
+          "Week 14 Deliverable 1",
+          "Week 14 Deliverable 2",
+          "Week 14 Deliverable 3"
+        ]
+      }
+    ],
+    "oracleRecommendation": {
+      "issue": "Peak pressure detected in Week 8 (87).",
+      "action": "Shift one deadline from Week 8 to Week 9.",
+      "projectedPressureReduction": 15,
+      "projectedOutcomeImprovement": 9
+    }
+  },
+  "ECON450": {
+    "name": "ECON 450 \u2014 Behavioral Econ",
+    "professor": "Dr. Patel",
+    "weeklyPressure": [
+      {
+        "week": 1,
+        "pressure": 24,
+        "deadlines": 1,
+        "assignments": [
+          "Week 1 Deliverable 1"
+        ]
+      },
+      {
+        "week": 2,
+        "pressure": 30,
+        "deadlines": 1,
+        "assignments": [
+          "Week 2 Deliverable 1"
+        ]
+      },
+      {
+        "week": 3,
+        "pressure": 35,
+        "deadlines": 2,
+        "assignments": [
+          "Week 3 Deliverable 1",
+          "Week 3 Deliverable 2"
+        ]
+      },
+      {
+        "week": 4,
+        "pressure": 42,
+        "deadlines": 2,
+        "assignments": [
+          "Week 4 Deliverable 1",
+          "Week 4 Deliverable 2"
+        ]
+      },
+      {
+        "week": 5,
+        "pressure": 54,
+        "deadlines": 3,
+        "assignments": [
+          "Week 5 Deliverable 1",
+          "Week 5 Deliverable 2",
+          "Week 5 Deliverable 3"
+        ]
+      },
+      {
+        "week": 6,
+        "pressure": 62,
+        "deadlines": 3,
+        "assignments": [
+          "Week 6 Deliverable 1",
+          "Week 6 Deliverable 2",
+          "Week 6 Deliverable 3"
+        ]
+      },
+      {
+        "week": 7,
+        "pressure": 69,
+        "deadlines": 3,
+        "assignments": [
+          "Week 7 Deliverable 1",
+          "Week 7 Deliverable 2",
+          "Week 7 Deliverable 3"
+        ]
+      },
+      {
+        "week": 8,
+        "pressure": 71,
+        "deadlines": 2,
+        "assignments": [
+          "Week 8 Deliverable 1",
+          "Week 8 Deliverable 2"
+        ]
+      },
+      {
+        "week": 9,
+        "pressure": 63,
+        "deadlines": 2,
+        "assignments": [
+          "Week 9 Deliverable 1",
+          "Week 9 Deliverable 2"
+        ]
+      },
+      {
+        "week": 10,
+        "pressure": 58,
+        "deadlines": 1,
+        "assignments": [
+          "Week 10 Deliverable 1"
+        ]
+      },
+      {
+        "week": 11,
+        "pressure": 55,
+        "deadlines": 2,
+        "assignments": [
+          "Week 11 Deliverable 1",
+          "Week 11 Deliverable 2"
+        ]
+      },
+      {
+        "week": 12,
+        "pressure": 49,
+        "deadlines": 1,
+        "assignments": [
+          "Week 12 Deliverable 1"
+        ]
+      },
+      {
+        "week": 13,
+        "pressure": 61,
+        "deadlines": 2,
+        "assignments": [
+          "Week 13 Deliverable 1",
+          "Week 13 Deliverable 2"
+        ]
+      },
+      {
+        "week": 14,
+        "pressure": 68,
+        "deadlines": 2,
+        "assignments": [
+          "Week 14 Deliverable 1",
+          "Week 14 Deliverable 2"
+        ]
+      }
+    ],
+    "oracleRecommendation": {
+      "issue": "Peak pressure detected in Week 8 (71).",
+      "action": "Shift one deadline from Week 8 to Week 9.",
+      "projectedPressureReduction": 12,
+      "projectedOutcomeImprovement": 7
+    }
+  },
+  "STATS301": {
+    "name": "STATS 301 \u2014 Econometrics",
+    "professor": "Dr. Lin",
+    "weeklyPressure": [
+      {
+        "week": 1,
+        "pressure": 18,
+        "deadlines": 1,
+        "assignments": [
+          "Week 1 Deliverable 1"
+        ]
+      },
+      {
+        "week": 2,
+        "pressure": 22,
+        "deadlines": 1,
+        "assignments": [
+          "Week 2 Deliverable 1"
+        ]
+      },
+      {
+        "week": 3,
+        "pressure": 28,
+        "deadlines": 2,
+        "assignments": [
+          "Week 3 Deliverable 1",
+          "Week 3 Deliverable 2"
+        ]
+      },
+      {
+        "week": 4,
+        "pressure": 34,
+        "deadlines": 2,
+        "assignments": [
+          "Week 4 Deliverable 1",
+          "Week 4 Deliverable 2"
+        ]
+      },
+      {
+        "week": 5,
+        "pressure": 40,
+        "deadlines": 2,
+        "assignments": [
+          "Week 5 Deliverable 1",
+          "Week 5 Deliverable 2"
+        ]
+      },
+      {
+        "week": 6,
+        "pressure": 48,
+        "deadlines": 3,
+        "assignments": [
+          "Week 6 Deliverable 1",
+          "Week 6 Deliverable 2",
+          "Week 6 Deliverable 3"
+        ]
+      },
+      {
+        "week": 7,
+        "pressure": 54,
+        "deadlines": 2,
+        "assignments": [
+          "Week 7 Deliverable 1",
+          "Week 7 Deliverable 2"
+        ]
+      },
+      {
+        "week": 8,
+        "pressure": 58,
+        "deadlines": 2,
+        "assignments": [
+          "Week 8 Deliverable 1",
+          "Week 8 Deliverable 2"
+        ]
+      },
+      {
+        "week": 9,
+        "pressure": 52,
+        "deadlines": 2,
+        "assignments": [
+          "Week 9 Deliverable 1",
+          "Week 9 Deliverable 2"
+        ]
+      },
+      {
+        "week": 10,
+        "pressure": 49,
+        "deadlines": 1,
+        "assignments": [
+          "Week 10 Deliverable 1"
+        ]
+      },
+      {
+        "week": 11,
+        "pressure": 47,
+        "deadlines": 1,
+        "assignments": [
+          "Week 11 Deliverable 1"
+        ]
+      },
+      {
+        "week": 12,
+        "pressure": 44,
+        "deadlines": 1,
+        "assignments": [
+          "Week 12 Deliverable 1"
+        ]
+      },
+      {
+        "week": 13,
+        "pressure": 53,
+        "deadlines": 2,
+        "assignments": [
+          "Week 13 Deliverable 1",
+          "Week 13 Deliverable 2"
+        ]
+      },
+      {
+        "week": 14,
+        "pressure": 60,
+        "deadlines": 2,
+        "assignments": [
+          "Week 14 Deliverable 1",
+          "Week 14 Deliverable 2"
+        ]
+      }
+    ],
+    "oracleRecommendation": {
+      "issue": "Peak pressure detected in Week 14 (60).",
+      "action": "Shift one deadline from Week 14 to Week 14.",
+      "projectedPressureReduction": 10,
+      "projectedOutcomeImprovement": 6
+    }
+  },
+  "POLISCI201": {
+    "name": "POLISCI 201 \u2014 Pol. Economy",
+    "professor": "Dr. Ramirez",
+    "weeklyPressure": [
+      {
+        "week": 1,
+        "pressure": 16,
+        "deadlines": 1,
+        "assignments": [
+          "Week 1 Deliverable 1"
+        ]
+      },
+      {
+        "week": 2,
+        "pressure": 18,
+        "deadlines": 1,
+        "assignments": [
+          "Week 2 Deliverable 1"
+        ]
+      },
+      {
+        "week": 3,
+        "pressure": 24,
+        "deadlines": 1,
+        "assignments": [
+          "Week 3 Deliverable 1"
+        ]
+      },
+      {
+        "week": 4,
+        "pressure": 27,
+        "deadlines": 1,
+        "assignments": [
+          "Week 4 Deliverable 1"
+        ]
+      },
+      {
+        "week": 5,
+        "pressure": 30,
+        "deadlines": 1,
+        "assignments": [
+          "Week 5 Deliverable 1"
+        ]
+      },
+      {
+        "week": 6,
+        "pressure": 33,
+        "deadlines": 2,
+        "assignments": [
+          "Week 6 Deliverable 1",
+          "Week 6 Deliverable 2"
+        ]
+      },
+      {
+        "week": 7,
+        "pressure": 35,
+        "deadlines": 1,
+        "assignments": [
+          "Week 7 Deliverable 1"
+        ]
+      },
+      {
+        "week": 8,
+        "pressure": 34,
+        "deadlines": 1,
+        "assignments": [
+          "Week 8 Deliverable 1"
+        ]
+      },
+      {
+        "week": 9,
+        "pressure": 32,
+        "deadlines": 1,
+        "assignments": [
+          "Week 9 Deliverable 1"
+        ]
+      },
+      {
+        "week": 10,
+        "pressure": 30,
+        "deadlines": 1,
+        "assignments": [
+          "Week 10 Deliverable 1"
+        ]
+      },
+      {
+        "week": 11,
+        "pressure": 28,
+        "deadlines": 1,
+        "assignments": [
+          "Week 11 Deliverable 1"
+        ]
+      },
+      {
+        "week": 12,
+        "pressure": 29,
+        "deadlines": 1,
+        "assignments": [
+          "Week 12 Deliverable 1"
+        ]
+      },
+      {
+        "week": 13,
+        "pressure": 31,
+        "deadlines": 1,
+        "assignments": [
+          "Week 13 Deliverable 1"
+        ]
+      },
+      {
+        "week": 14,
+        "pressure": 34,
+        "deadlines": 1,
+        "assignments": [
+          "Week 14 Deliverable 1"
+        ]
+      }
+    ],
+    "oracleRecommendation": {
+      "issue": "Peak pressure detected in Week 7 (35).",
+      "action": "Shift one deadline from Week 7 to Week 8.",
+      "projectedPressureReduction": 6,
+      "projectedOutcomeImprovement": 3
+    }
+  },
+  "FIN320": {
+    "name": "FIN 320 \u2014 Corporate Finance",
+    "professor": "Prof. Walsh",
+    "weeklyPressure": [
+      {
+        "week": 1,
+        "pressure": 22,
+        "deadlines": 1,
+        "assignments": [
+          "Week 1 Deliverable 1"
+        ]
+      },
+      {
+        "week": 2,
+        "pressure": 26,
+        "deadlines": 1,
+        "assignments": [
+          "Week 2 Deliverable 1"
+        ]
+      },
+      {
+        "week": 3,
+        "pressure": 34,
+        "deadlines": 2,
+        "assignments": [
+          "Week 3 Deliverable 1",
+          "Week 3 Deliverable 2"
+        ]
+      },
+      {
+        "week": 4,
+        "pressure": 40,
+        "deadlines": 2,
+        "assignments": [
+          "Week 4 Deliverable 1",
+          "Week 4 Deliverable 2"
+        ]
+      },
+      {
+        "week": 5,
+        "pressure": 48,
+        "deadlines": 2,
+        "assignments": [
+          "Week 5 Deliverable 1",
+          "Week 5 Deliverable 2"
+        ]
+      },
+      {
+        "week": 6,
+        "pressure": 55,
+        "deadlines": 3,
+        "assignments": [
+          "Week 6 Deliverable 1",
+          "Week 6 Deliverable 2",
+          "Week 6 Deliverable 3"
+        ]
+      },
+      {
+        "week": 7,
+        "pressure": 61,
+        "deadlines": 2,
+        "assignments": [
+          "Week 7 Deliverable 1",
+          "Week 7 Deliverable 2"
+        ]
+      },
+      {
+        "week": 8,
+        "pressure": 66,
+        "deadlines": 3,
+        "assignments": [
+          "Week 8 Deliverable 1",
+          "Week 8 Deliverable 2",
+          "Week 8 Deliverable 3"
+        ]
+      },
+      {
+        "week": 9,
+        "pressure": 58,
+        "deadlines": 2,
+        "assignments": [
+          "Week 9 Deliverable 1",
+          "Week 9 Deliverable 2"
+        ]
+      },
+      {
+        "week": 10,
+        "pressure": 52,
+        "deadlines": 1,
+        "assignments": [
+          "Week 10 Deliverable 1"
+        ]
+      },
+      {
+        "week": 11,
+        "pressure": 50,
+        "deadlines": 1,
+        "assignments": [
+          "Week 11 Deliverable 1"
+        ]
+      },
+      {
+        "week": 12,
+        "pressure": 54,
+        "deadlines": 2,
+        "assignments": [
+          "Week 12 Deliverable 1",
+          "Week 12 Deliverable 2"
+        ]
+      },
+      {
+        "week": 13,
+        "pressure": 59,
+        "deadlines": 2,
+        "assignments": [
+          "Week 13 Deliverable 1",
+          "Week 13 Deliverable 2"
+        ]
+      },
+      {
+        "week": 14,
+        "pressure": 63,
+        "deadlines": 2,
+        "assignments": [
+          "Week 14 Deliverable 1",
+          "Week 14 Deliverable 2"
+        ]
+      }
+    ],
+    "oracleRecommendation": {
+      "issue": "Peak pressure detected in Week 8 (66).",
+      "action": "Shift one deadline from Week 8 to Week 9.",
+      "projectedPressureReduction": 11,
+      "projectedOutcomeImprovement": 7
+    }
+  },
+  "MKT410": {
+    "name": "MKT 410 \u2014 Consumer Analytics",
+    "professor": "Dr. Evans",
+    "weeklyPressure": [
+      {
+        "week": 1,
+        "pressure": 20,
+        "deadlines": 1,
+        "assignments": [
+          "Week 1 Deliverable 1"
+        ]
+      },
+      {
+        "week": 2,
+        "pressure": 24,
+        "deadlines": 1,
+        "assignments": [
+          "Week 2 Deliverable 1"
+        ]
+      },
+      {
+        "week": 3,
+        "pressure": 29,
+        "deadlines": 1,
+        "assignments": [
+          "Week 3 Deliverable 1"
+        ]
+      },
+      {
+        "week": 4,
+        "pressure": 33,
+        "deadlines": 2,
+        "assignments": [
+          "Week 4 Deliverable 1",
+          "Week 4 Deliverable 2"
+        ]
+      },
+      {
+        "week": 5,
+        "pressure": 39,
+        "deadlines": 2,
+        "assignments": [
+          "Week 5 Deliverable 1",
+          "Week 5 Deliverable 2"
+        ]
+      },
+      {
+        "week": 6,
+        "pressure": 44,
+        "deadlines": 2,
+        "assignments": [
+          "Week 6 Deliverable 1",
+          "Week 6 Deliverable 2"
+        ]
+      },
+      {
+        "week": 7,
+        "pressure": 49,
+        "deadlines": 2,
+        "assignments": [
+          "Week 7 Deliverable 1",
+          "Week 7 Deliverable 2"
+        ]
+      },
+      {
+        "week": 8,
+        "pressure": 53,
+        "deadlines": 2,
+        "assignments": [
+          "Week 8 Deliverable 1",
+          "Week 8 Deliverable 2"
+        ]
+      },
+      {
+        "week": 9,
+        "pressure": 47,
+        "deadlines": 1,
+        "assignments": [
+          "Week 9 Deliverable 1"
+        ]
+      },
+      {
+        "week": 10,
+        "pressure": 43,
+        "deadlines": 1,
+        "assignments": [
+          "Week 10 Deliverable 1"
+        ]
+      },
+      {
+        "week": 11,
+        "pressure": 40,
+        "deadlines": 1,
+        "assignments": [
+          "Week 11 Deliverable 1"
+        ]
+      },
+      {
+        "week": 12,
+        "pressure": 45,
+        "deadlines": 2,
+        "assignments": [
+          "Week 12 Deliverable 1",
+          "Week 12 Deliverable 2"
+        ]
+      },
+      {
+        "week": 13,
+        "pressure": 50,
+        "deadlines": 2,
+        "assignments": [
+          "Week 13 Deliverable 1",
+          "Week 13 Deliverable 2"
+        ]
+      },
+      {
+        "week": 14,
+        "pressure": 55,
+        "deadlines": 2,
+        "assignments": [
+          "Week 14 Deliverable 1",
+          "Week 14 Deliverable 2"
+        ]
+      }
+    ],
+    "oracleRecommendation": {
+      "issue": "Peak pressure detected in Week 14 (55).",
+      "action": "Shift one deadline from Week 14 to Week 14.",
+      "projectedPressureReduction": 9,
+      "projectedOutcomeImprovement": 6
+    }
+  },
+  "PSYCH270": {
+    "name": "PSYCH 270 \u2014 Behavioral Research",
+    "professor": "Dr. Ito",
+    "weeklyPressure": [
+      {
+        "week": 1,
+        "pressure": 17,
+        "deadlines": 1,
+        "assignments": [
+          "Week 1 Deliverable 1"
+        ]
+      },
+      {
+        "week": 2,
+        "pressure": 20,
+        "deadlines": 1,
+        "assignments": [
+          "Week 2 Deliverable 1"
+        ]
+      },
+      {
+        "week": 3,
+        "pressure": 26,
+        "deadlines": 1,
+        "assignments": [
+          "Week 3 Deliverable 1"
+        ]
+      },
+      {
+        "week": 4,
+        "pressure": 31,
+        "deadlines": 1,
+        "assignments": [
+          "Week 4 Deliverable 1"
+        ]
+      },
+      {
+        "week": 5,
+        "pressure": 36,
+        "deadlines": 2,
+        "assignments": [
+          "Week 5 Deliverable 1",
+          "Week 5 Deliverable 2"
+        ]
+      },
+      {
+        "week": 6,
+        "pressure": 42,
+        "deadlines": 2,
+        "assignments": [
+          "Week 6 Deliverable 1",
+          "Week 6 Deliverable 2"
+        ]
+      },
+      {
+        "week": 7,
+        "pressure": 47,
+        "deadlines": 2,
+        "assignments": [
+          "Week 7 Deliverable 1",
+          "Week 7 Deliverable 2"
+        ]
+      },
+      {
+        "week": 8,
+        "pressure": 50,
+        "deadlines": 2,
+        "assignments": [
+          "Week 8 Deliverable 1",
+          "Week 8 Deliverable 2"
+        ]
+      },
+      {
+        "week": 9,
+        "pressure": 45,
+        "deadlines": 1,
+        "assignments": [
+          "Week 9 Deliverable 1"
+        ]
+      },
+      {
+        "week": 10,
+        "pressure": 39,
+        "deadlines": 1,
+        "assignments": [
+          "Week 10 Deliverable 1"
+        ]
+      },
+      {
+        "week": 11,
+        "pressure": 37,
+        "deadlines": 1,
+        "assignments": [
+          "Week 11 Deliverable 1"
+        ]
+      },
+      {
+        "week": 12,
+        "pressure": 40,
+        "deadlines": 1,
+        "assignments": [
+          "Week 12 Deliverable 1"
+        ]
+      },
+      {
+        "week": 13,
+        "pressure": 46,
+        "deadlines": 2,
+        "assignments": [
+          "Week 13 Deliverable 1",
+          "Week 13 Deliverable 2"
+        ]
+      },
+      {
+        "week": 14,
+        "pressure": 52,
+        "deadlines": 2,
+        "assignments": [
+          "Week 14 Deliverable 1",
+          "Week 14 Deliverable 2"
+        ]
+      }
+    ],
+    "oracleRecommendation": {
+      "issue": "Peak pressure detected in Week 14 (52).",
+      "action": "Shift one deadline from Week 14 to Week 14.",
+      "projectedPressureReduction": 9,
+      "projectedOutcomeImprovement": 5
+    }
+  },
+  "BUS210": {
+    "name": "BUS 210 \u2014 Business Finance",
+    "professor": "Dr. Sandra Mwangi",
+    "weeklyPressure": [
+      {
+        "week": 1,
+        "pressure": 18,
+        "deadlines": 1,
+        "assignments": [
+          "Week 1 Deliverable 1"
+        ]
+      },
+      {
+        "week": 2,
+        "pressure": 25,
+        "deadlines": 1,
+        "assignments": [
+          "Week 2 Deliverable 1"
+        ]
+      },
+      {
+        "week": 3,
+        "pressure": 38,
+        "deadlines": 2,
+        "assignments": [
+          "Week 3 Deliverable 1",
+          "Week 3 Deliverable 2"
+        ]
+      },
+      {
+        "week": 4,
+        "pressure": 45,
+        "deadlines": 2,
+        "assignments": [
+          "Week 4 Deliverable 1",
+          "Week 4 Deliverable 2"
+        ]
+      },
+      {
+        "week": 5,
+        "pressure": 60,
+        "deadlines": 3,
+        "assignments": [
+          "Week 5 Deliverable 1",
+          "Week 5 Deliverable 2",
+          "Week 5 Deliverable 3"
+        ]
+      },
+      {
+        "week": 6,
+        "pressure": 42,
+        "deadlines": 2,
+        "assignments": [
+          "Week 6 Deliverable 1",
+          "Week 6 Deliverable 2"
+        ]
+      },
+      {
+        "week": 7,
+        "pressure": 38,
+        "deadlines": 1,
+        "assignments": [
+          "Week 7 Deliverable 1"
+        ]
+      },
+      {
+        "week": 8,
+        "pressure": 46,
+        "deadlines": 2,
+        "assignments": [
+          "Week 8 Deliverable 1",
+          "Week 8 Deliverable 2"
+        ]
+      },
+      {
+        "week": 9,
+        "pressure": 40,
+        "deadlines": 2,
+        "assignments": [
+          "Week 9 Deliverable 1",
+          "Week 9 Deliverable 2"
+        ]
+      },
+      {
+        "week": 10,
+        "pressure": 35,
+        "deadlines": 1,
+        "assignments": [
+          "Week 10 Deliverable 1"
+        ]
+      },
+      {
+        "week": 11,
+        "pressure": 33,
+        "deadlines": 1,
+        "assignments": [
+          "Week 11 Deliverable 1"
+        ]
+      },
+      {
+        "week": 12,
+        "pressure": 37,
+        "deadlines": 1,
+        "assignments": [
+          "Week 12 Deliverable 1"
+        ]
+      },
+      {
+        "week": 13,
+        "pressure": 43,
+        "deadlines": 2,
+        "assignments": [
+          "Week 13 Deliverable 1",
+          "Week 13 Deliverable 2"
+        ]
+      },
+      {
+        "week": 14,
+        "pressure": 49,
+        "deadlines": 2,
+        "assignments": [
+          "Week 14 Deliverable 1",
+          "Week 14 Deliverable 2"
+        ]
+      }
+    ],
+    "oracleRecommendation": {
+      "issue": "Peak pressure detected in Week 5 (60).",
+      "action": "Shift one deadline from Week 5 to Week 6.",
+      "projectedPressureReduction": 10,
+      "projectedOutcomeImprovement": 6
+    }
+  }
+}
