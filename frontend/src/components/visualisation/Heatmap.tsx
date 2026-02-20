@@ -71,7 +71,7 @@ const Heatmap = () => {
 
     return (
         <div className="viz-panel">
-            <h3 className="panel-title">Student Wellness Heatmap — All Students by Week</h3>
+            <h3 className="panel-title">Student Wellness Heatmap - All Students by Week</h3>
             <div className="heatmap-wrap">
                 <div className="hm-labels">
                     {weeks.map((week) => (
@@ -82,7 +82,12 @@ const Heatmap = () => {
                 </div>
                 <div className="hm-grid">
                     {cells.map((cell, i) => (
-                        <span key={i} className={`hm-cell ${cell.tone}`} title={`W${cell.week} · Pulse ${cell.pulse}`} />
+                        <span
+                            key={i}
+                            className={`hm-cell ${cell.tone}`}
+                            data-tooltip={`Pulse ${cell.pulse}`}
+                            title={`Week ${cell.week} - Pulse ${cell.pulse}`}
+                        />
                     ))}
                 </div>
                 <div className="heatmap-legend">

@@ -16,9 +16,10 @@ interface Props {
     dashboardTags?: string[];
 }
 
-const toStatus = (riskLevel: RiskLevel): "critical" | "warning" | "stable" => {
+const toStatus = (riskLevel: RiskLevel): "critical" | "warning" | "watch" | "stable" => {
     if (riskLevel === "CRITICAL") return "critical";
-    if (riskLevel === "HIGH" || riskLevel === "WATCH") return "warning";
+    if (riskLevel === "HIGH") return "warning";
+    if (riskLevel === "WATCH") return "watch";
     return "stable";
 };
 
@@ -37,6 +38,7 @@ export default function StudentCard({
     dashboardTags,
 }: Props) {
     const status = toStatus(riskLevel);
+    const tagClass = status === "critical" ? "tag-critical" : status === "warning" ? "tag-warning" : status === "watch" ? "tag-watch" : "tag-neutral";
     const initials = name
         .split(" ")
         .map((part) => part[0])
@@ -82,4 +84,3 @@ export default function StudentCard({
         </div>
     );
 }
-    const tagClass = status === "critical" ? "tag-critical" : status === "warning" ? "tag-warning" : "tag-neutral";

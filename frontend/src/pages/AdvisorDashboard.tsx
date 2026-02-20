@@ -8,6 +8,7 @@ import type { StudentCardData } from "types/api";
 export default function AdvisorDashboard() {
     const [students, setStudents] = useState<StudentCardData[]>([]);
     const [filter, setFilter] = useState("all");
+    const [search, setSearch] = useState("");
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -45,16 +46,27 @@ export default function AdvisorDashboard() {
     );
 
     const visible = useMemo(() => {
-        if (filter === "all") return students;
-        return students.filter((s) => s.riskLevel.toLowerCase() === filter);
-    }, [students, filter]);
+        const filteredByRisk = filter === "all" ? students : students.filter((s) => s.riskLevel.toLowerCase() === filter);
+        const term = search.trim().toLowerCase();
+        if (!term) return filteredByRisk;
+        return filteredByRisk.filter(
+            (student) =>
+                student.name.toLowerCase().includes(term) ||
+                student.id.toLowerCase().includes(term) ||
+                student.course.toLowerCase().includes(term) ||
+                (student.major ?? "").toLowerCase().includes(term)
+        );
+    }, [students, filter, search]);
 
-    const grouped = useMemo(() => ({
-        critical: visible.filter((s) => s.riskLevel === "CRITICAL"),
-        high: visible.filter((s) => s.riskLevel === "HIGH"),
-        watch: visible.filter((s) => s.riskLevel === "WATCH"),
-        stable: visible.filter((s) => s.riskLevel === "STABLE"),
-    }), [visible]);
+    const grouped = useMemo(
+        () => ({
+            critical: visible.filter((s) => s.riskLevel === "CRITICAL"),
+            high: visible.filter((s) => s.riskLevel === "HIGH"),
+            watch: visible.filter((s) => s.riskLevel === "WATCH"),
+            stable: visible.filter((s) => s.riskLevel === "STABLE"),
+        }),
+        [visible]
+    );
 
     return (
         <section className="page-shell advisor-layout">
@@ -63,18 +75,29 @@ export default function AdvisorDashboard() {
                 <div className="page-hdr">
                     <div>
                         <h1 className="page-title">Student Wellness Dashboard</h1>
-                        <p className="page-sub">400 students · ECON Department · Advisor: Dr. Sarah Chen</p>
+                        <p className="page-sub">400 students - ECON Department - Advisor: Dr. Sarah Chen</p>
                     </div>
-                    <div className="week-chip">Week 8 of 14 · Nov 14, 2024</div>
+                    <div className="week-chip">Week 8 of 14 - Nov 14, 2024</div>
+                </div>
+
+                <div className="dashboard-search-row">
+                    <input
+                        className="dashboard-search"
+                        type="text"
+                        value={search}
+                        onChange={(event) => setSearch(event.target.value)}
+                        placeholder="Search by name, student ID, course, or major"
+                    />
+                    <span className="dashboard-search-count">{visible.length} shown</span>
                 </div>
 
                 {loading && <Loading />}
                 {error && <p>{error}</p>}
-                {!loading && !error && visible.length === 0 && <p>No students match the selected filter.</p>}
+                {!loading && !error && visible.length === 0 && <p>No students match your filter/search.</p>}
                 {!loading && !error && (
                     <>
                         <div className="section-row">
-                            <span className="section-label critical-txt">Critical — Act Today</span>
+                            <span className="section-label critical-txt">Critical - Act Today</span>
                             <span className="section-line" />
                         </div>
                         {grouped.critical.map((student) => (
@@ -96,7 +119,7 @@ export default function AdvisorDashboard() {
                         ))}
 
                         <div className="section-row">
-                            <span className="section-label warning-txt">High Risk — Reach Out This Week</span>
+                            <span className="section-label warning-txt">High Risk - Reach Out This Week</span>
                             <span className="section-line" />
                         </div>
                         {grouped.high.map((student) => (
@@ -118,7 +141,7 @@ export default function AdvisorDashboard() {
                         ))}
 
                         <div className="section-row">
-                            <span className="section-label watch-txt">Watch — Monitor</span>
+                            <span className="section-label watch-txt">Watch - Monitor</span>
                             <span className="section-line" />
                         </div>
                         {grouped.watch.map((student) => (
@@ -140,7 +163,7 @@ export default function AdvisorDashboard() {
                         ))}
 
                         <div className="section-row">
-                            <span className="section-label stable-txt">Stable — Keep Momentum</span>
+                            <span className="section-label stable-txt">Stable - Keep Momentum</span>
                             <span className="section-line" />
                         </div>
                         {grouped.stable.map((student) => (
