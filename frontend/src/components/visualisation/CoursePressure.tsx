@@ -25,7 +25,7 @@ const CoursePressure = () => {
             </div>
 
             <div className="rec-box">
-                <strong>Oracle Recommendation:</strong> Move ECON 401 Assignment 3 by five days to reduce overlapping
+                <strong>PulseAI Recommendation:</strong> Move ECON 401 Assignment 3 by five days to reduce overlapping
                 deadline pressure for 12 at-risk students.
                 <div className="rec-impact">Estimated impact: High Risk to Watch for 12 students</div>
             </div>

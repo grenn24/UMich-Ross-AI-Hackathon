@@ -3,7 +3,7 @@ export default function OraclePanel() {
         <div className="oracle-panel">
             <div className="oracle-hdr">
                 <div>
-                    <span className="oracle-badge">Oracle Digital Assistant</span>
+                    <span className="oracle-badge">PulseAI Digital Assistant</span>
                     <div className="oracle-name">Generated Outreach Email</div>
                     <div className="oracle-desc">Built from strongest academic signal + current stress markers</div>
                 </div>
