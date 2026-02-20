@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, Query
 from typing import Optional
-from mock_data import COURSE_DATA, STUDENTS
+from mock_data import get_course_data, get_students
 
 router = APIRouter()
 
@@ -20,7 +20,8 @@ def get_all_students(
     Return all students, optionally filtered by risk level and sorted.
     Default: sorted by pulseScore ascending (lowest = most at risk first).
     """
-    results = [_enrich_student(s) for s in STUDENTS]
+    students = get_students()
+    results = [_enrich_student(s) for s in students]
 
     if risk_level:
         valid_levels = {"CRITICAL", "HIGH", "WATCH", "STABLE"}
@@ -44,7 +45,8 @@ def get_all_students(
 @router.get("/{student_id}")
 def get_student(student_id: str):
     """Return full student profile including 14-week trajectory."""
-    student = next((s for s in STUDENTS if s["id"] == student_id), None)
+    students = get_students()
+    student = next((s for s in students if s["id"] == student_id), None)
     if not student:
         raise HTTPException(status_code=404, detail=f"Student '{student_id}' not found")
     return _enrich_student(student)
@@ -53,7 +55,8 @@ def get_student(student_id: str):
 @router.get("/{student_id}/trajectory")
 def get_trajectory(student_id: str):
     """Return only the weekly Pressure / Resilience / Pulse data for charting."""
-    student = next((s for s in STUDENTS if s["id"] == student_id), None)
+    students = get_students()
+    student = next((s for s in students if s["id"] == student_id), None)
     if not student:
         raise HTTPException(status_code=404, detail=f"Student '{student_id}' not found")
     enriched = _enrich_student(student)
@@ -68,7 +71,8 @@ def get_trajectory(student_id: str):
 @router.get("/{student_id}/signals")
 def get_signals(student_id: str):
     """Return top contributing risk signals for a student."""
-    student = next((s for s in STUDENTS if s["id"] == student_id), None)
+    students = get_students()
+    student = next((s for s in students if s["id"] == student_id), None)
     if not student:
         raise HTTPException(status_code=404, detail=f"Student '{student_id}' not found")
     return {
@@ -83,7 +87,8 @@ def get_signals(student_id: str):
 @router.get("/{student_id}/language-drift")
 def get_language_drift(student_id: str):
     """Return student writing baseline vs current drift block."""
-    student = next((s for s in STUDENTS if s["id"] == student_id), None)
+    students = get_students()
+    student = next((s for s in students if s["id"] == student_id), None)
     if not student:
         raise HTTPException(status_code=404, detail=f"Student '{student_id}' not found")
     return {
@@ -146,7 +151,8 @@ def _enrich_student(student: dict) -> dict:
     latest = weekly[-1] if weekly else {"week": 0, "pressure": 0, "resilience": 0}
     current_week = latest.get("week", 0)
 
-    course = COURSE_DATA.get(student["course"], {})
+    course_data = get_course_data()
+    course = course_data.get(student["course"], {})
     course_week = next(
         (w for w in course.get("weeklyPressure", []) if w["week"] == current_week),
         None,

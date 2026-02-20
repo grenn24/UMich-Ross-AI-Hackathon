@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from mock_data import COURSE_DATA, STUDENTS
+from mock_data import get_course_data, get_students
 
 router = APIRouter()
 
@@ -7,8 +7,9 @@ router = APIRouter()
 @router.get("/")
 def get_all_courses():
     """List all courses with their top-level pressure summary."""
+    course_data = get_course_data()
     results = []
-    for course_id, course in COURSE_DATA.items():
+    for course_id, course in course_data.items():
         pressures = [w["pressure"] for w in course["weeklyPressure"]]
         peak_week = max(course["weeklyPressure"], key=lambda w: w["pressure"])
         results.append({
@@ -25,8 +26,10 @@ def get_all_courses():
 
 @router.get("/{course_id}")
 def get_course(course_id: str):
-    """Full course detail including weekly pressure and PulseAI recommendation."""
-    course = COURSE_DATA.get(course_id.upper())
+    """Full course detail including weekly pressure and Oracle recommendation."""
+    course_data = get_course_data()
+    students = get_students()
+    course = course_data.get(course_id.upper())
     if not course:
         raise HTTPException(status_code=404, detail=f"Course '{course_id}' not found.")
 
@@ -38,7 +41,7 @@ def get_course(course_id: str):
             "pulseScore": s["pulseScore"],
             "pulseTrend": s["pulseTrend"]
         }
-        for s in STUDENTS if s["course"] == course_id.upper()
+        for s in students if s["course"] == course_id.upper()
     ]
 
     pressures = [w["pressure"] for w in course["weeklyPressure"]]
@@ -57,8 +60,9 @@ def get_course(course_id: str):
 
 @router.get("/{course_id}/recommendation")
 def get_recommendation(course_id: str):
-    """Return only the PulseAI deadline redistribution recommendation for a course."""
-    course = COURSE_DATA.get(course_id.upper())
+    """Return only the Oracle deadline redistribution recommendation for a course."""
+    course_data = get_course_data()
+    course = course_data.get(course_id.upper())
     if not course:
         raise HTTPException(status_code=404, detail=f"Course '{course_id}' not found.")
     return {
@@ -79,4 +83,3 @@ def _pressure_to_zone(pressure: int) -> str:
     if pressure >= 30:
         return "YELLOW"
     return "GREEN"
-
