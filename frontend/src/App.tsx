@@ -19,6 +19,7 @@ const App = () => {
 
 					<Route index element={<AdvisorDashboard />} />
 					<Route path="profile" element={<StudentProfile />} />
+					<Route path="profile/:studentId" element={<StudentProfile />} />
 					<Route path="visualization" element={<PulseVisualization />} />
 					<Route path="oracle" element={<OracleEngine />} />
 

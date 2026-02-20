@@ -1,34 +1,63 @@
+import { useEffect, useMemo, useState } from "react";
+import { getCourses } from "utilities/pulseApi";
+import type { CourseSummary } from "types/api";
+
 const CoursePressure = () => {
+    const [courses, setCourses] = useState<CourseSummary[]>([]);
+
+    useEffect(() => {
+        let mounted = true;
+        const load = async () => {
+            try {
+                const response = await getCourses();
+                if (mounted) setCourses(response);
+            } catch {
+                if (mounted) setCourses([]);
+            }
+        };
+        load();
+        return () => {
+            mounted = false;
+        };
+    }, []);
+
+    const topCourses = useMemo(
+        () =>
+            [...courses]
+                .sort((a, b) => b.peakPressure - a.peakPressure)
+                .slice(0, 3),
+        [courses]
+    );
+
+    const recommendation = useMemo(
+        () => topCourses.find((course) => course.deadlineClusterDetected) ?? topCourses[0],
+        [topCourses]
+    );
+
     return (
         <div className="viz-panel">
             <h3 className="panel-title">Course Pressure Intelligence</h3>
-            <div className="course-item">
-                <div className="course-nm">ECON 401 - Advanced Macro</div>
-                <div className="course-bar">
-                    <div className="course-fill fill-red" style={{ width: "87%" }} />
-                </div>
-                <div className="course-val critical-txt">87</div>
-            </div>
-            <div className="course-item">
-                <div className="course-nm">ECON 450 - Behavioral Econ</div>
-                <div className="course-bar">
-                    <div className="course-fill fill-orange" style={{ width: "71%" }} />
-                </div>
-                <div className="course-val warning-txt">71</div>
-            </div>
-            <div className="course-item">
-                <div className="course-nm">POLISCI 201 - Political Economy</div>
-                <div className="course-bar">
-                    <div className="course-fill fill-green" style={{ width: "34%" }} />
-                </div>
-                <div className="course-val stable-txt">34</div>
-            </div>
+            {topCourses.map((course) => {
+                const cls = course.peakPressure >= 80 ? "fill-red" : course.peakPressure >= 60 ? "fill-orange" : "fill-green";
+                const txtCls = course.peakPressure >= 80 ? "critical-txt" : course.peakPressure >= 60 ? "warning-txt" : "stable-txt";
+                return (
+                    <div className="course-item" key={course.courseId}>
+                        <div className="course-nm">{course.name}</div>
+                        <div className="course-bar">
+                            <div className={`course-fill ${cls}`} style={{ width: `${course.peakPressure}%` }} />
+                        </div>
+                        <div className={`course-val ${txtCls}`}>{course.peakPressure}</div>
+                    </div>
+                );
+            })}
 
-            <div className="rec-box">
-                <strong>PulseAI Recommendation:</strong> Move ECON 401 Assignment 3 by five days to reduce overlapping
-                deadline pressure for 12 at-risk students.
-                <div className="rec-impact">Estimated impact: High Risk to Watch for 12 students</div>
-            </div>
+            {recommendation && (
+                <div className="rec-box">
+                    <strong>PulseAI Recommendation:</strong> Review week {recommendation.peakWeek} load in {recommendation.name}
+                    {" "}to reduce pressure clustering.
+                    <div className="rec-impact">Estimated impact: reduce peak pressure from {recommendation.peakPressure}</div>
+                </div>
+            )}
         </div>
     );
 };

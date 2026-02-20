@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, Query
 from typing import Optional
-from mock_data import STUDENTS
+from mock_data import COURSE_DATA, STUDENTS
 
 router = APIRouter()
 
@@ -20,7 +20,7 @@ def get_all_students(
     Return all students, optionally filtered by risk level and sorted.
     Default: sorted by pulseScore ascending (lowest = most at risk first).
     """
-    results = list(STUDENTS)
+    results = [_enrich_student(s) for s in STUDENTS]
 
     if risk_level:
         valid_levels = {"CRITICAL", "HIGH", "WATCH", "STABLE"}
@@ -47,7 +47,7 @@ def get_student(student_id: str):
     student = next((s for s in STUDENTS if s["id"] == student_id), None)
     if not student:
         raise HTTPException(status_code=404, detail=f"Student '{student_id}' not found")
-    return student
+    return _enrich_student(student)
 
 
 @router.get("/{student_id}/trajectory")
@@ -56,10 +56,12 @@ def get_trajectory(student_id: str):
     student = next((s for s in STUDENTS if s["id"] == student_id), None)
     if not student:
         raise HTTPException(status_code=404, detail=f"Student '{student_id}' not found")
+    enriched = _enrich_student(student)
     return {
         "studentId": student_id,
         "name": student["name"],
-        "weeklyData": student["weeklyData"]
+        "weeklyData": student["weeklyData"],
+        "currentWeek": enriched["currentWeek"],
     }
 
 
@@ -108,8 +110,11 @@ def calculate_pulse(body: dict):
 
 def _to_card(student: dict) -> dict:
     """Strip weeklyData and posts for the dashboard list view."""
-    return {k: v for k, v in student.items()
-            if k not in ("weeklyData", "week1Post", "currentPost", "strongestMoment")}
+    return {
+        k: v
+        for k, v in student.items()
+        if k not in ("weeklyData", "week1Post", "currentPost", "strongestMoment")
+    }
 
 
 def _pulse_to_risk(pulse: float) -> str:
@@ -120,3 +125,30 @@ def _pulse_to_risk(pulse: float) -> str:
     elif pulse < 65:
         return "WATCH"
     return "STABLE"
+
+
+def _enrich_student(student: dict) -> dict:
+    """Attach frontend-ready current week + key metric summary."""
+    weekly = student.get("weeklyData", [])
+    latest = weekly[-1] if weekly else {"week": 0, "pressure": 0, "resilience": 0}
+    current_week = latest.get("week", 0)
+
+    course = COURSE_DATA.get(student["course"], {})
+    course_week = next(
+        (w for w in course.get("weeklyPressure", []) if w["week"] == current_week),
+        None,
+    )
+    deadlines = course_week["deadlines"] if course_week else 0
+
+    post_words = len(student.get("currentPost", "").split())
+    engagement = min(100, max(8, post_words * 6))
+
+    enriched = {**student}
+    enriched["currentWeek"] = current_week
+    enriched["currentMetrics"] = {
+        "pressure": latest.get("pressure", 0),
+        "resilience": latest.get("resilience", 0),
+        "deadlines": deadlines,
+        "engagement": engagement,
+    }
+    return enriched

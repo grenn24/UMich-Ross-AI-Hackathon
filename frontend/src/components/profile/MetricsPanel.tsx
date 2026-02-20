@@ -1,10 +1,14 @@
 interface Props {
     title: string;
     score: number;
+    deadlines: number;
+    engagement: number;
 }
 
-export default function MetricPanel({ title, score }: Props) {
+export default function MetricPanel({ title, score, deadlines, engagement }: Props) {
     const isPressure = title.toLowerCase().includes("pressure");
+    const deadlinesPct = Math.min(100, Math.max(0, deadlines * 20));
+    const engagementPct = Math.min(100, Math.max(0, engagement));
 
     return (
         <div className="panel">
@@ -13,16 +17,16 @@ export default function MetricPanel({ title, score }: Props) {
             <div className="signal-row">
                 <span className="signal-name">Deadlines</span>
                 <div className="signal-bar">
-                    <div className={`signal-fill ${isPressure ? "fill-red" : "fill-green"}`} style={{ width: "78%" }} />
+                    <div className={`signal-fill ${isPressure ? "fill-red" : "fill-green"}`} style={{ width: `${deadlinesPct}%` }} />
                 </div>
-                <span className="signal-val">78</span>
+                <span className="signal-val">{deadlines}</span>
             </div>
             <div className="signal-row">
                 <span className="signal-name">Engagement</span>
                 <div className="signal-bar">
-                    <div className={`signal-fill ${isPressure ? "fill-orange" : "fill-green"}`} style={{ width: "42%" }} />
+                    <div className={`signal-fill ${isPressure ? "fill-orange" : "fill-green"}`} style={{ width: `${engagementPct}%` }} />
                 </div>
-                <span className="signal-val">42</span>
+                <span className="signal-val">{engagement}</span>
             </div>
         </div>
     );

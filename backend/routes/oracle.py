@@ -1,5 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from mock_data import STUDENTS
+from config import COMPARTMENT_ID, OCI_CONFIG
 
 router = APIRouter()
 
@@ -166,7 +167,7 @@ def generate_draft(body: dict):
     first_name = name.split()[0]
     signal_context = f" I noticed {top_signals[0].lower()}." if top_signals else ""
 
-    draft = f"""Hi {first_name},
+    fallback_draft = f"""Hi {first_name},
 
 I wanted to reach out personally because I care about how you're doing in {course}.
 
@@ -178,6 +179,14 @@ Would any time this week work for you?
 
 Warm regards,
 Your Academic Advisor"""
+
+    draft = _generate_with_oci(
+        first_name=first_name,
+        course=course,
+        strongest_moment=strongest_moment,
+        signal_context=signal_context,
+        fallback=fallback_draft,
+    )
 
     return {
         "studentId": student_id,
@@ -284,3 +293,72 @@ def _pressure_to_zone(pressure: int) -> str:
     if pressure >= 45: return "ORANGE"
     if pressure >= 30: return "YELLOW"
     return "GREEN"
+
+
+def _generate_with_oci(
+    first_name: str,
+    course: str,
+    strongest_moment: str,
+    signal_context: str,
+    fallback: str,
+) -> str:
+    """
+    Use OCI Generative AI for draft generation when configured.
+    Falls back to deterministic text for local/demo environments.
+    """
+    required = ["user", "fingerprint", "tenancy", "region", "key_content"]
+    if not all(OCI_CONFIG.get(k) for k in required):
+        return fallback
+
+    try:
+        import oci
+
+        endpoint = f"https://inference.generativeai.{OCI_CONFIG['region']}.oci.oraclecloud.com"
+        client = oci.generative_ai_inference.GenerativeAiInferenceClient(
+            config=OCI_CONFIG,
+            service_endpoint=endpoint,
+            retry_strategy=oci.retry.NoneRetryStrategy(),
+            timeout=(10, 60),
+        )
+
+        prompt = (
+            "You are an empathetic academic advisor. "
+            "Write a concise outreach email with warm, non-judgmental tone and one clear call to action.\n\n"
+            f"Student first name: {first_name}\n"
+            f"Course: {course}\n"
+            f"Strongest moment: {strongest_moment}\n"
+            f"Risk signal context:{signal_context or ' none'}\n"
+            "Constraints: 120-180 words, include invitation for a 15-minute check-in this week."
+        )
+
+        text_content = oci.generative_ai_inference.models.TextContent(text=prompt)
+        message = oci.generative_ai_inference.models.Message(role="USER", content=[text_content])
+        chat_request = oci.generative_ai_inference.models.GenericChatRequest(
+            api_format=oci.generative_ai_inference.models.BaseChatRequest.API_FORMAT_GENERIC,
+            messages=[message],
+            max_tokens=280,
+            temperature=0.6,
+        )
+        on_demand_serving_mode = oci.generative_ai_inference.models.OnDemandServingMode(
+            model_id="meta.llama-3.1-70b-instruct"
+        )
+        chat_details = oci.generative_ai_inference.models.ChatDetails(
+            serving_mode=on_demand_serving_mode,
+            chat_request=chat_request,
+            compartment_id=COMPARTMENT_ID or OCI_CONFIG["tenancy"],
+        )
+
+        response = client.chat(chat_details)
+        chat_response = response.data.chat_response
+        if (
+            hasattr(chat_response, "choices")
+            and chat_response.choices
+            and chat_response.choices[0].message
+            and chat_response.choices[0].message.content
+            and chat_response.choices[0].message.content[0].text
+        ):
+            return chat_response.choices[0].message.content[0].text.strip()
+    except Exception:
+        return fallback
+
+    return fallback

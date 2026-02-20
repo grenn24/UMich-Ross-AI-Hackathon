@@ -1,17 +1,24 @@
 interface Props {
     active: string;
     onChange: (v: string) => void;
+    counts: {
+        all: number;
+        critical: number;
+        high: number;
+        watch: number;
+        stable: number;
+    };
 }
 
 const filters = [
-    { key: "all", label: "All students", count: "2,004", badge: "badge-stable" },
-    { key: "critical", label: "Critical", count: "2", badge: "badge-critical" },
-    { key: "warning", label: "High risk", count: "11", badge: "badge-warning" },
-    { key: "watch", label: "Watch list", count: "87", badge: "badge-watch" },
-    { key: "stable", label: "Stable", count: "1,904", badge: "badge-stable" },
-];
+    { key: "all", label: "All students", badge: "badge-stable" },
+    { key: "critical", label: "Critical", badge: "badge-critical" },
+    { key: "high", label: "High risk", badge: "badge-warning" },
+    { key: "watch", label: "Watch list", badge: "badge-watch" },
+    { key: "stable", label: "Stable", badge: "badge-stable" },
+] as const;
 
-export default function FilterButtons({ active, onChange }: Props) {
+export default function FilterButtons({ active, onChange, counts }: Props) {
     return (
         <>
             {filters.map((f) => (
@@ -21,7 +28,7 @@ export default function FilterButtons({ active, onChange }: Props) {
                     onClick={() => onChange(f.key)}
                 >
                     <span>{f.label}</span>
-                    <span className={`filter-badge ${f.badge}`}>{f.count}</span>
+                    <span className={`filter-badge ${f.badge}`}>{counts[f.key]}</span>
                 </button>
             ))}
         </>

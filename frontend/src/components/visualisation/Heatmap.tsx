@@ -1,19 +1,52 @@
+import { useEffect, useMemo, useState } from "react";
+import { getUniversityHeatmap } from "utilities/pulseApi";
+import type { HeatmapResponse } from "types/api";
+
 const Heatmap = () => {
-    const cells = Array.from({ length: 14 * 8 }, (_, idx) => {
-        const wave = (idx % 14) + 1;
-        if (wave === 8) return "hm-red";
-        if (wave > 5 && wave < 9) return "hm-orange";
-        if (wave > 9) return "hm-green";
-        return "hm-yellow";
-    });
+    const [heatmap, setHeatmap] = useState<HeatmapResponse["heatmap"]>({});
+
+    useEffect(() => {
+        let mounted = true;
+        const load = async () => {
+            try {
+                const response = await getUniversityHeatmap();
+                if (mounted) setHeatmap(response.heatmap);
+            } catch {
+                if (mounted) setHeatmap({});
+            }
+        };
+        load();
+        return () => {
+            mounted = false;
+        };
+    }, []);
+
+    const weeks = useMemo(() => {
+        const values = Object.values(heatmap);
+        const maxWeek = Math.max(0, ...values.map((course) => course.weeklyPressure.length));
+        return Array.from({ length: maxWeek }, (_, i) => i + 1);
+    }, [heatmap]);
+
+    const cells = useMemo(
+        () =>
+            Object.values(heatmap).flatMap((course) =>
+                course.weeklyPressure.map((item) => {
+                    if (item.riskZone === "RED") return "hm-red";
+                    if (item.riskZone === "ORANGE") return "hm-orange";
+                    if (item.riskZone === "GREEN") return "hm-green";
+                    return "hm-yellow";
+                })
+            ),
+        [heatmap]
+    );
 
     return (
         <div className="viz-panel">
             <h3 className="panel-title">Student Wellness Heatmap</h3>
             <div className="hm-labels">
-                {Array.from({ length: 14 }, (_, i) => (
-                    <span key={i} className="hm-lbl">
-                        W{i + 1}
+                {weeks.map((week) => (
+                    <span key={week} className="hm-lbl">
+                        W{week}
                     </span>
                 ))}
             </div>
