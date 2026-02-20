@@ -297,7 +297,7 @@ body {
 
 .sidebar-label {
   font-size: 10px;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--text-3);
   letter-spacing: 0.8px;
   text-transform: uppercase;
@@ -481,6 +481,7 @@ body {
 .page-sub {
   font-size: 12px;
   color: var(--text-3);
+  font-weight: 700;
   margin: 0;
 }
 
@@ -947,7 +948,7 @@ body {
 
 .panel-title {
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--text-3);
   letter-spacing: 0.5px;
   text-transform: uppercase;
@@ -1010,7 +1011,15 @@ body {
 
 .oracle-name {
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 700;
+  color: var(--text-3);
+  margin-top: 8px;
+}
+
+.svc-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-3);
   margin-top: 8px;
 }
 
@@ -1499,7 +1508,7 @@ body {
 
 .io-label {
   font-size: 10px;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--text-3);
   text-transform: uppercase;
   margin: 6px 0;
