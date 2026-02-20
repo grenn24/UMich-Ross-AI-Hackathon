@@ -74,7 +74,7 @@ class ApiClient {
 		config?: AxiosRequestConfig
 	): Promise<AxiosResponse<T>> {
 		const response = this.client.get<T>(url, {
-			withCredentials: true,
+			withCredentials: false,
 			...config,
 		});
 		return response;
@@ -87,7 +87,7 @@ class ApiClient {
 		config?: AxiosRequestConfig
 	): Promise<AxiosResponse<R>> {
 		return this.client.post<T, AxiosResponse<R>>(url, data, {
-			withCredentials: true,
+			withCredentials: false,
 			...config,
 		});
 	}
@@ -99,7 +99,7 @@ class ApiClient {
 		config?: AxiosRequestConfig
 	): Promise<AxiosResponse<R>> {
 		return this.client.put<T, AxiosResponse<R>>(url, data, {
-			withCredentials: true,
+			withCredentials: false,
 			...config,
 		});
 	}
@@ -109,7 +109,7 @@ class ApiClient {
 		url: string,
 		config?: AxiosRequestConfig
 	): Promise<AxiosResponse<T>> {
-		return this.client.delete<T>(url, { withCredentials: true, ...config });
+		return this.client.delete<T>(url, { withCredentials: false, ...config });
 	}
 
 	// PATCH request
@@ -119,7 +119,7 @@ class ApiClient {
 		config?: AxiosRequestConfig
 	): Promise<AxiosResponse<R>> {
 		return this.client.patch<T, AxiosResponse<R>>(url, data, {
-			withCredentials: true,
+			withCredentials: false,
 			...config,
 		});
 	}
@@ -132,9 +132,13 @@ const createApiClient = (
 	) => void = () => {},
 	responseErrorInterceptor: (status: number, body: Object) => void = () => {}
 ) =>
-	new ApiClient(
-		import.meta.env.VITE_BACKEND_BASEURL + parentPath,
+{
+	const rawBase = import.meta.env.VITE_BACKEND_BASEURL || "http://127.0.0.1:8000";
+	const normalizedBase = rawBase.replace(/\/+$/, "");
+	return new ApiClient(
+		normalizedBase + parentPath,
 		requestConfigInterceptor,
 		responseErrorInterceptor
 	);
+};
 export default createApiClient;

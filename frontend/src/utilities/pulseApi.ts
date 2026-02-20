@@ -15,7 +15,7 @@ const coursesApi = createApiClient("/api/courses");
 export const getStudents = async (riskLevel?: string): Promise<StudentCardData[]> => {
 	const params = riskLevel && riskLevel !== "all" ? { risk_level: riskLevel } : undefined;
 	const response = await studentsApi.get<StudentCardData[]>("/", { params });
-	return response.data as StudentCardData[];
+	return Array.isArray(response.data) ? (response.data as StudentCardData[]) : [];
 };
 
 export const getStudentById = async (studentId: string): Promise<StudentDetail> => {
@@ -43,5 +43,5 @@ export const getUniversityHeatmap = async (): Promise<HeatmapResponse> => {
 
 export const getCourses = async (): Promise<CourseSummary[]> => {
 	const response = await coursesApi.get<CourseSummary[]>("/");
-	return response.data as CourseSummary[];
+	return Array.isArray(response.data) ? (response.data as CourseSummary[]) : [];
 };
