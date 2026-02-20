@@ -1,7 +1,10 @@
-import type { CourseSummary, HeatmapResponse, OracleDraftResponse, StudentCardData, StudentDetail, TrajectoryResponse } from "types/api";
+import type { ChatbotInsightResponse, CourseSummary, HeatmapResponse, OracleDraftResponse, RefineDraftResponse, StressCauseResponse, StudentCardData, StudentDetail, TrajectoryResponse } from "types/api";
 export declare const getStudents: (riskLevel?: string) => Promise<StudentCardData[]>;
 export declare const getStudentById: (studentId: string) => Promise<StudentDetail>;
 export declare const getTrajectory: (studentId: string) => Promise<TrajectoryResponse>;
 export declare const generateOracleDraft: (studentId: string) => Promise<OracleDraftResponse>;
 export declare const getUniversityHeatmap: () => Promise<HeatmapResponse>;
 export declare const getCourses: () => Promise<CourseSummary[]>;
+export declare const getChatbotInsight: (studentId: string, prompt: string) => Promise<ChatbotInsightResponse>;
+export declare const refineDraft: (studentId: string, currentDraft: string, instruction: string) => Promise<RefineDraftResponse>;
+export declare const getStressCause: (studentId: string) => Promise<StressCauseResponse>;

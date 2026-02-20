@@ -67,7 +67,7 @@ export default function StudentProfile() {
 
             <ProfileHeader student={student} />
             <MetricsGrid student={student} />
-            <TrajectoryChart weeklyData={weeklyData} />
+            <TrajectoryChart weeklyData={weeklyData} studentId={student.id} />
             <OraclePanel student={student} />
         </section>
     );

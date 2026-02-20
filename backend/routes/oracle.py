@@ -1,8 +1,13 @@
 from fastapi import APIRouter, HTTPException
+import json
+import os
+import time
+import uuid
+from openai import OpenAI
 from mock_data import STUDENTS
-from config import COMPARTMENT_ID, OCI_CONFIG
 
 router = APIRouter()
+openai_client = OpenAI()
 
 
 # ── Oracle AI Language ────────────────────────────────────────────────────────
@@ -149,6 +154,7 @@ def generate_draft(body: dict):
     Input:  { "studentId": str } OR full override fields.
     Output: Personalized email draft + metadata.
     """
+    start_time = time.perf_counter()
     student_id = body.get("studentId")
     student = None
 
@@ -180,13 +186,22 @@ Would any time this week work for you?
 Warm regards,
 Your Academic Advisor"""
 
-    draft = _generate_with_oci(
-        first_name=first_name,
-        course=course,
-        strongest_moment=strongest_moment,
-        signal_context=signal_context,
-        fallback=fallback_draft,
+    draft, draft_reason, draft_model = _openai_text(
+        prompt=(
+            "You are an empathetic academic advisor. "
+            "Write a concise outreach email with warm, non-judgmental tone and one clear call to action.\n\n"
+            f"Student first name: {first_name}\n"
+            f"Course: {course}\n"
+            f"Strongest moment: {strongest_moment}\n"
+            f"Risk signal context:{signal_context or ' none'}\n"
+            "Constraints: 120-180 words, include invitation for a 15-minute check-in this week."
+        ),
+        max_output_tokens=360,
     )
+    fallback_used = False
+    if not draft or not draft.strip():
+        draft = fallback_draft
+        fallback_used = True
 
     return {
         "studentId": student_id,
@@ -197,7 +212,226 @@ Your Academic Advisor"""
             "strongestMomentUsed": strongest_moment,
             "primarySignalReferenced": top_signals[0] if top_signals else None,
             "toneCalibration": _tone_for_risk(risk_level)
-        }
+        },
+        "metadata": _meta(
+            provider="fallback" if fallback_used else "openai",
+            model=None if fallback_used else draft_model,
+            fallback_used=fallback_used,
+            fallback_reason=draft_reason if fallback_used else None,
+            started_at=start_time,
+        ),
+    }
+
+
+@router.post("/chatbot-insight")
+def chatbot_insight(body: dict):
+    """
+    Student-level chatbot endpoint.
+    Input: { "studentId": str, "prompt": str }
+    Output: graph + explanatory paragraph for stress causes.
+    Uses OpenAI Chat Completions with deterministic fallback.
+    """
+    start_time = time.perf_counter()
+    student_id = str(body.get("studentId", "")).strip()
+    prompt = str(body.get("prompt", "")).strip()
+
+    if not student_id:
+        raise HTTPException(status_code=400, detail="'studentId' field is required.")
+    if not prompt:
+        raise HTTPException(status_code=400, detail="'prompt' field is required.")
+
+    student = next((s for s in STUDENTS if s["id"] == student_id), None)
+    if not student:
+        raise HTTPException(status_code=404, detail=f"Student '{student_id}' not found.")
+
+    fallback = _fallback_chatbot_insight(student=student, prompt=prompt)
+    openai_prompt = (
+        "You are an academic advisor assistant. Based on the student profile and user prompt, "
+        "return ONLY valid compact JSON with keys: paragraph (string), graphData (array of exactly 3 objects). "
+        "Each graphData object must have: label (short string), value (integer 0-100).\n\n"
+        f"Student name: {student['name']}\n"
+        f"Risk level: {student['riskLevel']}\n"
+        f"Pulse score: {student['pulseScore']}\n"
+        f"Top signals: {', '.join(student['topSignals'])}\n"
+        f"User prompt: {prompt}\n"
+    )
+
+    completion, reason, model = _openai_chat(
+        prompt=openai_prompt,
+        max_tokens=260,
+        temperature=0.3,
+    )
+
+    provider = "openai"
+    fallback_used = False
+    graph_data = fallback["graphData"]
+    paragraph = fallback["paragraph"]
+
+    if completion:
+        parsed = _extract_json(completion)
+        if parsed:
+            try:
+                candidate_graph = parsed.get("graphData", [])
+                candidate_paragraph = str(parsed.get("paragraph", "")).strip()
+                validated = []
+                for row in candidate_graph[:3]:
+                    label = str(row.get("label", "")).strip()[:40]
+                    value = int(row.get("value", 0))
+                    validated.append({"label": label or "Signal", "value": max(0, min(100, value))})
+                if len(validated) == 3 and candidate_paragraph:
+                    graph_data = validated
+                    paragraph = candidate_paragraph
+                else:
+                    fallback_used = True
+                    reason = reason or "OpenAI JSON did not match expected schema."
+            except Exception:
+                fallback_used = True
+                reason = reason or "OpenAI JSON parsing failed."
+        else:
+            fallback_used = True
+            reason = reason or "OpenAI response had no JSON object."
+    else:
+        provider = "fallback"
+        fallback_used = True
+
+    return {
+        "studentId": student_id,
+        "prompt": prompt,
+        "graphData": graph_data,
+        "paragraph": paragraph,
+        "metadata": _meta(
+            provider=provider,
+            model=model,
+            fallback_used=fallback_used,
+            fallback_reason=reason if fallback_used else None,
+            started_at=start_time,
+        ),
+    }
+
+
+@router.get("/stress-cause/{student_id}")
+def stress_cause(student_id: str):
+    """
+    AI-generated stress-cause summary + graph based on real student stress scores.
+    """
+    start_time = time.perf_counter()
+    student = next((s for s in STUDENTS if s["id"] == student_id), None)
+    if not student:
+        raise HTTPException(status_code=404, detail=f"Student '{student_id}' not found.")
+
+    latest = student.get("weeklyData", [])[-1] if student.get("weeklyData") else {"pressure": 0, "resilience": 0}
+    prompt = (
+        "Analyze student stress drivers and return ONLY valid JSON with keys: paragraph (string), "
+        "graphData (array with 3 objects {label, value}). Values must be 0-100 integers.\n\n"
+        f"Student: {student['name']}\n"
+        f"Risk level: {student['riskLevel']}\n"
+        f"Pulse score: {student['pulseScore']}\n"
+        f"Pressure: {latest.get('pressure', 0)}\n"
+        f"Resilience: {latest.get('resilience', 0)}\n"
+        f"Top signals: {', '.join(student.get('topSignals', []))}\n"
+    )
+
+    completion, reason, model = _openai_chat(prompt=prompt, max_tokens=260, temperature=0.2)
+    fallback = _fallback_chatbot_insight(student=student, prompt="stress-cause")
+    graph_data = fallback["graphData"]
+    paragraph = fallback["paragraph"]
+    provider = "openai"
+    fallback_used = False
+
+    parsed = _extract_json(completion) if completion else None
+    if parsed:
+        try:
+            rows = []
+            for row in parsed.get("graphData", [])[:3]:
+                label = str(row.get("label", "")).strip()[:40] or "Signal"
+                value = int(row.get("value", 0))
+                rows.append({"label": label, "value": max(0, min(100, value))})
+            text = str(parsed.get("paragraph", "")).strip()
+            if len(rows) == 3 and text:
+                graph_data = rows
+                paragraph = text
+            else:
+                fallback_used = True
+                reason = reason or "OpenAI JSON missing required fields."
+        except Exception:
+            fallback_used = True
+            reason = reason or "OpenAI JSON parse failed."
+    else:
+        provider = "fallback"
+        fallback_used = True
+        reason = reason or "OpenAI response missing JSON."
+
+    return {
+        "studentId": student_id,
+        "graphData": graph_data,
+        "paragraph": paragraph,
+        "metadata": _meta(
+            provider=provider,
+            model=model,
+            fallback_used=fallback_used,
+            fallback_reason=reason if fallback_used else None,
+            started_at=start_time,
+        ),
+    }
+
+
+@router.post("/refine-draft")
+def refine_draft(body: dict):
+    """
+    Human validation/refinement endpoint for outreach email.
+    Input: { "studentId": str, "currentDraft": str, "instruction": str }
+    """
+    start_time = time.perf_counter()
+    student_id = str(body.get("studentId", "")).strip()
+    current_draft = str(body.get("currentDraft", "")).strip()
+    instruction = str(body.get("instruction", "")).strip()
+
+    if not student_id:
+        raise HTTPException(status_code=400, detail="'studentId' field is required.")
+    if not current_draft:
+        raise HTTPException(status_code=400, detail="'currentDraft' field is required.")
+    if not instruction:
+        raise HTTPException(status_code=400, detail="'instruction' field is required.")
+
+    student = next((s for s in STUDENTS if s["id"] == student_id), None)
+    if not student:
+        raise HTTPException(status_code=404, detail=f"Student '{student_id}' not found.")
+
+    refine_prompt = (
+        "Revise the email draft with the user instruction. Keep it concise, supportive, and advisor-appropriate.\n\n"
+        f"Student name: {student['name']}\n"
+        f"Risk level: {student['riskLevel']}\n"
+        f"Instruction: {instruction}\n\n"
+        f"Current draft:\n{current_draft}\n"
+    )
+
+    completion, reason, model = _openai_chat(
+        prompt=refine_prompt,
+        max_tokens=360,
+        temperature=0.4,
+    )
+
+    if completion and completion.strip():
+        refined = completion.strip()
+        provider = "openai"
+        fallback_used = False
+        fallback_reason = None
+    else:
+        refined = f"{current_draft}\n\n[Refinement request captured: {instruction}]"
+        provider = "fallback"
+        fallback_used = True
+        fallback_reason = reason or "OpenAI completion was empty."
+
+    return {
+        "studentId": student_id,
+        "refinedDraft": refined,
+        "metadata": _meta(
+            provider=provider,
+            model=model,
+            fallback_used=fallback_used,
+            fallback_reason=fallback_reason,
+            started_at=start_time,
+        ),
     }
 
 
@@ -295,70 +529,83 @@ def _pressure_to_zone(pressure: int) -> str:
     return "GREEN"
 
 
-def _generate_with_oci(
-    first_name: str,
-    course: str,
-    strongest_moment: str,
-    signal_context: str,
-    fallback: str,
-) -> str:
-    """
-    Use OCI Generative AI for draft generation when configured.
-    Falls back to deterministic text for local/demo environments.
-    """
-    required = ["user", "fingerprint", "tenancy", "region", "key_content"]
-    if not all(OCI_CONFIG.get(k) for k in required):
-        return fallback
+def _openai_chat(prompt: str, max_tokens: int = 320, temperature: float = 0.4):
+    text, reason, model = _openai_text(
+        prompt=prompt,
+        max_output_tokens=max_tokens,
+        temperature=temperature,
+    )
+    return text, reason, model
+
+
+def _openai_text(prompt: str, max_output_tokens: int = 320, temperature: float = 0.4):
+    model = os.getenv("OPENAI_MODEL", "gpt-5.2-mini")
+    if not os.getenv("OPENAI_API_KEY"):
+        return None, "Missing OPENAI_API_KEY.", model
 
     try:
-        import oci
-
-        endpoint = f"https://inference.generativeai.{OCI_CONFIG['region']}.oci.oraclecloud.com"
-        client = oci.generative_ai_inference.GenerativeAiInferenceClient(
-            config=OCI_CONFIG,
-            service_endpoint=endpoint,
-            retry_strategy=oci.retry.NoneRetryStrategy(),
-            timeout=(10, 60),
+        response = openai_client.responses.create(
+            model=model,
+            input=prompt,
+            temperature=temperature,
+            max_output_tokens=max_output_tokens,
         )
 
-        prompt = (
-            "You are an empathetic academic advisor. "
-            "Write a concise outreach email with warm, non-judgmental tone and one clear call to action.\n\n"
-            f"Student first name: {first_name}\n"
-            f"Course: {course}\n"
-            f"Strongest moment: {strongest_moment}\n"
-            f"Risk signal context:{signal_context or ' none'}\n"
-            "Constraints: 120-180 words, include invitation for a 15-minute check-in this week."
-        )
+        output_text = getattr(response, "output_text", None)
+        if output_text and str(output_text).strip():
+            return str(output_text).strip(), None, model
 
-        text_content = oci.generative_ai_inference.models.TextContent(text=prompt)
-        message = oci.generative_ai_inference.models.Message(role="USER", content=[text_content])
-        chat_request = oci.generative_ai_inference.models.GenericChatRequest(
-            api_format=oci.generative_ai_inference.models.BaseChatRequest.API_FORMAT_GENERIC,
-            messages=[message],
-            max_tokens=280,
-            temperature=0.6,
-        )
-        on_demand_serving_mode = oci.generative_ai_inference.models.OnDemandServingMode(
-            model_id="meta.llama-3.1-70b-instruct"
-        )
-        chat_details = oci.generative_ai_inference.models.ChatDetails(
-            serving_mode=on_demand_serving_mode,
-            chat_request=chat_request,
-            compartment_id=COMPARTMENT_ID or OCI_CONFIG["tenancy"],
-        )
+        if getattr(response, "output", None):
+            for item in response.output:
+                for content in getattr(item, "content", []) or []:
+                    text = getattr(content, "text", None)
+                    if text and str(text).strip():
+                        return str(text).strip(), None, model
 
-        response = client.chat(chat_details)
-        chat_response = response.data.chat_response
-        if (
-            hasattr(chat_response, "choices")
-            and chat_response.choices
-            and chat_response.choices[0].message
-            and chat_response.choices[0].message.content
-            and chat_response.choices[0].message.content[0].text
-        ):
-            return chat_response.choices[0].message.content[0].text.strip()
+        return None, "OpenAI response had no text output.", model
+    except Exception as error:
+        return None, f"OpenAI request failed: {str(error)[:220]}", model
+
+
+def _extract_json(text: str):
+    start = text.find("{")
+    end = text.rfind("}")
+    if start == -1 or end == -1 or end <= start:
+        return None
+    try:
+        return json.loads(text[start : end + 1])
     except Exception:
-        return fallback
+        return None
 
-    return fallback
+
+def _fallback_chatbot_insight(student: dict, prompt: str):
+    risk_bias = {"CRITICAL": 88, "HIGH": 74, "WATCH": 58, "STABLE": 32}
+    base = risk_bias.get(student["riskLevel"], 50)
+    graph = [
+        {"label": "Submission Delay", "value": min(100, max(0, base + 6))},
+        {"label": "Engagement Drop", "value": min(100, max(0, base))},
+        {"label": "Sentiment Shift", "value": min(100, max(0, base - 8))},
+    ]
+    paragraph = (
+        f"Main stress pressure for {student['name']} appears driven by {student['topSignals'][0].lower()}. "
+        f"Given the prompt '{prompt}', the strongest near-term interventions are deadline smoothing and "
+        "a short advisor check-in to restore participation confidence."
+    )
+    return {"graphData": graph, "paragraph": paragraph}
+
+
+def _meta(
+    provider: str,
+    started_at: float,
+    model: str = None,
+    fallback_used: bool = False,
+    fallback_reason: str = None,
+):
+    return {
+        "traceId": uuid.uuid4().hex,
+        "provider": provider,
+        "model": model,
+        "fallbackUsed": fallback_used,
+        "fallbackReason": fallback_reason,
+        "latencyMs": int((time.perf_counter() - started_at) * 1000),
+    }

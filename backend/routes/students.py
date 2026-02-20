@@ -151,4 +151,11 @@ def _enrich_student(student: dict) -> dict:
         "deadlines": deadlines,
         "engagement": engagement,
     }
+    enriched["predictedStress"] = min(
+        100,
+        max(
+            0,
+            int((100 - enriched.get("pulseScore", 0)) * 0.75 + latest.get("pressure", 0) * 0.25),
+        ),
+    )
     return enriched
