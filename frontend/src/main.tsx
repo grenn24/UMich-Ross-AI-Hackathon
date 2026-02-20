@@ -9,7 +9,7 @@ import { PersistGate } from "redux-persist/integration/react";
 
 WebFont.load({
 	google: {
-		families: ["IBM Plex Sans:300,400,500,600", "IBM Plex Mono:400,500"],
+		families: ["Atkinson Hyperlegible:400,500,700", "IBM Plex Mono:400,500"],
 	},
 });
 
