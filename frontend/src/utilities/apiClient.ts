@@ -133,10 +133,16 @@ const createApiClient = (
 	responseErrorInterceptor: (status: number, body: Object) => void = () => {}
 ) =>
 {
-	const rawBase = import.meta.env.VITE_BACKEND_BASEURL || "http://127.0.0.1:8000";
+	const rawBase =
+		import.meta.env.VITE_BACKEND_BASEURL ||
+		"https://umich-ross-ai-hackathon-production.up.railway.app";
 	const normalizedBase = rawBase.replace(/\/+$/, "");
+	const normalizedParent = parentPath.startsWith("/") ? parentPath : `/${parentPath}`;
+	const dedupedParent = normalizedBase.endsWith("/api") && normalizedParent.startsWith("/api/")
+		? normalizedParent.replace(/^\/api/, "")
+		: normalizedParent;
 	return new ApiClient(
-		normalizedBase + parentPath,
+		normalizedBase + dedupedParent,
 		requestConfigInterceptor,
 		responseErrorInterceptor
 	);
