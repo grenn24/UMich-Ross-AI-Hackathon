@@ -33,3 +33,14 @@ def root():
 @app.get("/api/health", tags=["Health"])
 def health():
     return {"status": "healthy", "version": "1.0.0"}
+
+
+@app.get("/api/test-oci", tags=["Health"])
+def test_oci():
+    import oci
+    from config import OCI_CONFIG
+    try:
+        ai_client = oci.ai_language.AIServiceLanguageClient(OCI_CONFIG)
+        return {"status": "OCI connected successfully"}
+    except Exception as e:
+        return {"status": "failed", "error": str(e)}
