@@ -1,5 +1,6 @@
 import json
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 from pathlib import Path
 
 
@@ -42,6 +43,26 @@ def _clamp(value: int, low: int, high: int) -> int:
     return max(low, min(high, value))
 
 
+=======
+import random
+from pathlib import Path
+
+
+_RNG = random.Random(42)
+_ROOT = Path(__file__).resolve().parent
+_SCENARIO_PATH = _ROOT / "data" / "student_scenario.json"
+
+
+def _load_scenario() -> dict:
+    with _SCENARIO_PATH.open("r", encoding="utf-8") as fp:
+        return json.load(fp)
+
+
+def _clamp(value: int, low: int, high: int) -> int:
+    return max(low, min(high, value))
+
+
+>>>>>>> Stashed changes
 def _sample(range_pair: list[int]) -> int:
     return _RNG.randint(int(range_pair[0]), int(range_pair[1]))
 
@@ -302,4 +323,7 @@ def _build_students(scenario: dict) -> list[dict]:
 SCENARIO = _load_scenario()
 COURSE_DATA = _build_course_data(SCENARIO)
 STUDENTS = _build_students(SCENARIO)
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
