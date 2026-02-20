@@ -4,15 +4,22 @@ import type { HeatmapResponse } from "types/api";
 
 const Heatmap = () => {
     const [heatmap, setHeatmap] = useState<HeatmapResponse["heatmap"]>({});
+    const [studentHeatmap, setStudentHeatmap] = useState<NonNullable<HeatmapResponse["studentHeatmap"]>>([]);
 
     useEffect(() => {
         let mounted = true;
         const load = async () => {
             try {
                 const response = await getUniversityHeatmap();
-                if (mounted) setHeatmap(response.heatmap);
+                if (mounted) {
+                    setHeatmap(response.heatmap);
+                    setStudentHeatmap(response.studentHeatmap ?? []);
+                }
             } catch {
-                if (mounted) setHeatmap({});
+                if (mounted) {
+                    setHeatmap({});
+                    setStudentHeatmap([]);
+                }
             }
         };
         load();
@@ -23,37 +30,71 @@ const Heatmap = () => {
 
     const weeks = useMemo(() => {
         const values = Object.values(heatmap);
-        const maxWeek = Math.max(0, ...values.map((course) => course.weeklyPressure.length));
+        const maxWeek = Math.max(14, ...values.map((course) => course.weeklyPressure.length), 0);
         return Array.from({ length: maxWeek }, (_, i) => i + 1);
     }, [heatmap]);
 
-    const cells = useMemo(
-        () =>
-            Object.values(heatmap).flatMap((course) =>
-                course.weeklyPressure.map((item) => {
-                    if (item.riskZone === "RED") return "hm-red";
-                    if (item.riskZone === "ORANGE") return "hm-orange";
-                    if (item.riskZone === "GREEN") return "hm-green";
-                    return "hm-yellow";
-                })
-            ),
-        [heatmap]
-    );
+    const cells = useMemo(() => {
+        if (studentHeatmap.length > 0) {
+            return studentHeatmap
+                .slice(0, 200)
+                .flatMap((student) =>
+                    student.weeklyPressure.map((item) => ({
+                        week: item.week,
+                        pulse: Math.max(0, 100 - item.pressure),
+                        tone:
+                            item.riskZone === "RED"
+                                ? "hm-red"
+                                : item.riskZone === "ORANGE"
+                                    ? "hm-orange"
+                                    : item.riskZone === "GREEN"
+                                        ? "hm-green"
+                                        : "hm-yellow",
+                    }))
+                );
+        }
+        return Object.values(heatmap).flatMap((course) =>
+            course.weeklyPressure.map((item) => ({
+                week: item.week,
+                pulse: Math.max(0, 100 - item.pressure),
+                tone:
+                    item.riskZone === "RED"
+                        ? "hm-red"
+                        : item.riskZone === "ORANGE"
+                            ? "hm-orange"
+                            : item.riskZone === "GREEN"
+                                ? "hm-green"
+                                : "hm-yellow",
+            }))
+        );
+    }, [heatmap, studentHeatmap]);
 
     return (
         <div className="viz-panel">
-            <h3 className="panel-title">Student Wellness Heatmap</h3>
-            <div className="hm-labels">
-                {weeks.map((week) => (
-                    <span key={week} className="hm-lbl">
-                        W{week}
-                    </span>
-                ))}
-            </div>
-            <div className="hm-grid">
-                {cells.map((tone, i) => (
-                    <span key={i} className={`hm-cell ${tone}`} />
-                ))}
+            <h3 className="panel-title">Student Wellness Heatmap — All Students by Week</h3>
+            <div className="heatmap-wrap">
+                <div className="hm-labels">
+                    {weeks.map((week) => (
+                        <span key={week} className="hm-lbl">
+                            W{week}
+                        </span>
+                    ))}
+                </div>
+                <div className="hm-grid">
+                    {cells.map((cell, i) => (
+                        <span key={i} className={`hm-cell ${cell.tone}`} title={`W${cell.week} · Pulse ${cell.pulse}`} />
+                    ))}
+                </div>
+                <div className="heatmap-legend">
+                    <span>Low wellness</span>
+                    <div className="heatmap-swatch">
+                        <span className="sw-red" />
+                        <span className="sw-orange" />
+                        <span className="sw-yellow" />
+                        <span className="sw-green" />
+                    </div>
+                    <span>High wellness</span>
+                </div>
             </div>
         </div>
     );

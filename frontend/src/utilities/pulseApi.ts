@@ -1,9 +1,12 @@
 import createApiClient from "./apiClient";
 import type {
 	ChatbotInsightResponse,
+	CompareLanguageResponse,
 	CourseSummary,
 	HeatmapResponse,
 	OracleDraftResponse,
+	OraclePulseCalcResponse,
+	OracleShowcaseResponse,
 	RefineDraftResponse,
 	StressCauseResponse,
 	StudentCardData,
@@ -75,4 +78,26 @@ export const refineDraft = async (
 export const getStressCause = async (studentId: string): Promise<StressCauseResponse> => {
 	const response = await oracleApi.get<StressCauseResponse>(`/stress-cause/${studentId}`);
 	return response.data as StressCauseResponse;
+};
+
+export const getOracleShowcase = async (studentId: string): Promise<OracleShowcaseResponse> => {
+	const response = await oracleApi.get<OracleShowcaseResponse>(`/showcase/${studentId}`);
+	return response.data as OracleShowcaseResponse;
+};
+
+export const compareStudentLanguage = async (studentId: string): Promise<CompareLanguageResponse> => {
+	const response = await oracleApi.get<CompareLanguageResponse>(`/compare-language/${studentId}`);
+	return response.data as CompareLanguageResponse;
+};
+
+export const calculateOraclePulse = async (signals: {
+	submissionTimeliness: number;
+	postFrequency: number;
+	postSentiment: number;
+	loginFrequency: number;
+	peerInteraction: number;
+	gradeTrajectory: number;
+}): Promise<OraclePulseCalcResponse> => {
+	const response = await oracleApi.post<typeof signals, OraclePulseCalcResponse>("/calculate-pulse", signals);
+	return response.data as OraclePulseCalcResponse;
 };

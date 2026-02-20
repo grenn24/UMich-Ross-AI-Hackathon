@@ -1,70 +1,77 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getChatbotInsight } from "utilities/pulseApi";
-import type { WeeklyDataPoint } from "types/api";
 
 interface Props {
-    weeklyData: WeeklyDataPoint[];
     studentId: string;
 }
 
-export default function TrajectoryChart({ weeklyData, studentId }: Props) {
-    const width = 820;
-    const height = 150;
-    const leftPad = 20;
-    const rightPad = 20;
-    const topPad = 15;
-    const bottomPad = 15;
-    const xSpan = width - leftPad - rightPad;
-    const ySpan = height - topPad - bottomPad;
-    const maxIndex = Math.max(1, weeklyData.length - 1);
-    const toY = (value: number) => topPad + ((100 - value) / 100) * ySpan;
-    const toX = (index: number) => leftPad + (index / maxIndex) * xSpan;
-    const pressurePoints = weeklyData.map((point, i) => `${toX(i)},${toY(point.pressure)}`).join(" ");
-    const resiliencePoints = weeklyData.map((point, i) => `${toX(i)},${toY(point.resilience)}`).join(" ");
-    const [insight, setInsight] = useState("");
+export default function TrajectoryChart({ studentId }: Props) {
+    const [question, setQuestion] = useState("");
+    const [answer, setAnswer] = useState("");
+    const [graphData, setGraphData] = useState<Array<{ label: string; value: number }>>([]);
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
-    const generateInsight = async () => {
+    const runQuestion = async (prompt: string) => {
+        if (!prompt.trim()) return;
         try {
             setLoading(true);
-            const response = await getChatbotInsight(
-                studentId,
-                "Summarize this student's stress trajectory and explain why the risk trend is concerning."
-            );
-            setInsight(response.paragraph);
+            setError(null);
+            const response = await getChatbotInsight(studentId, prompt.trim());
+            setAnswer(response.paragraph);
+            setGraphData(response.graphData.slice(0, 3));
         } catch {
-            setInsight("Unable to generate insight right now.");
+            setError("Unable to generate a chatbot response right now.");
+            setAnswer("");
+            setGraphData([]);
         } finally {
             setLoading(false);
         }
     };
 
+    useEffect(() => {
+        runQuestion("What are the top three current risk drivers and how severe is each one?");
+    }, [studentId]);
+
+    const handleSubmit = async () => {
+        await runQuestion(question);
+    };
+
     return (
         <div className="chart-panel">
             <div className="oracle-badge">PulseAI Digital Assistant</div>
-            <div className="oracle-name">Chatbot Insight</div>
-            <h3 className="panel-title">14-Week Pressure vs Resilience</h3>
-            <svg className="chart" viewBox="0 0 820 150" height="150" role="img" aria-label="Trajectory chart">
-                <line x1="0" y1="30" x2="820" y2="30" stroke="#e7eaf0" />
-                <line x1="0" y1="75" x2="820" y2="75" stroke="#e7eaf0" />
-                <line x1="0" y1="120" x2="820" y2="120" stroke="#e7eaf0" />
-                <polyline
-                    fill="none"
-                    stroke="#d93025"
-                    strokeWidth="2"
-                    points={pressurePoints}
+            <div className="oracle-name">Student Performance Q&A</div>
+            <h3 className="panel-title">14-Week Pressure vs. Resilience — Ask Follow-ups</h3>
+
+            <div className="chatbot-layout">
+                <textarea
+                    className="refine-input chatbot-input"
+                    placeholder="Ask a question about this student’s performance (e.g., What changed in the last 3 weeks?)"
+                    value={question}
+                    onChange={(event) => setQuestion(event.target.value)}
                 />
-                <polyline
-                    fill="none"
-                    stroke="#1a7f4b"
-                    strokeWidth="2"
-                    points={resiliencePoints}
-                />
-            </svg>
-            <p className="cause-paragraph chart-insight">{insight}</p>
-            <button className="btn-sm btn-primary chart-insight-btn" onClick={generateInsight} disabled={loading}>
-                {loading ? "Generating..." : "Generate Insight"}
-            </button>
+                <button className="btn-sm btn-primary insight-btn" onClick={handleSubmit} disabled={loading || !question.trim()}>
+                    {loading ? "Thinking..." : "Ask Chatbot"}
+                </button>
+            </div>
+
+            {error && <p className="cause-paragraph chart-insight">{error}</p>}
+
+            {graphData.length > 0 && (
+                <div className="cause-bars chart-insight">
+                    {graphData.map((point) => (
+                        <div className="cause-row" key={point.label}>
+                            <div className="cause-label">{point.label}</div>
+                            <div className="cause-track">
+                                <div className="cause-fill" style={{ width: `${point.value}%` }} />
+                            </div>
+                            <div className="cause-val">{point.value}</div>
+                        </div>
+                    ))}
+                </div>
+            )}
+
+            {answer && <p className="cause-paragraph">{answer}</p>}
         </div>
     );
 }

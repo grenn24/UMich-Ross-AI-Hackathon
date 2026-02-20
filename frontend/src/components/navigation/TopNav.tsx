@@ -1,28 +1,6 @@
-import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
-import { getStudents } from "utilities/pulseApi";
 
 const TopNav = () => {
-    const [currentWeek, setCurrentWeek] = useState<number | null>(null);
-
-    useEffect(() => {
-        let mounted = true;
-        const load = async () => {
-            try {
-                const students = await getStudents();
-                if (!mounted || students.length === 0) return;
-                const week = students.reduce((max, s) => Math.max(max, s.currentWeek), 0);
-                setCurrentWeek(week);
-            } catch {
-                setCurrentWeek(null);
-            }
-        };
-        load();
-        return () => {
-            mounted = false;
-        };
-    }, []);
-
     return (
         <nav className="topbar">
             <div className="logo">
@@ -41,16 +19,18 @@ const TopNav = () => {
                     Pulse Visualization
                 </NavLink>
                 <NavLink to="/oracle" className={({ isActive }) => `tnav ${isActive ? "active" : ""}`}>
-                    PulseAI Engine
+                    Oracle AI Engine
                 </NavLink>
             </div>
 
             <div className="topbar-right">
+                <span>University of Michigan</span>
+                <span style={{ color: "var(--border-dark)" }}>|</span>
+                <span>Dr. Sarah Chen</span>
                 <div className="live-pill">
                     <span className="live-dot" />
                     Live
                 </div>
-                <span>{currentWeek ? `Week ${currentWeek}` : "Week --"}</span>
             </div>
         </nav>
     );

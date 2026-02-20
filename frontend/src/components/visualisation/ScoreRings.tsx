@@ -1,35 +1,10 @@
-import { useEffect, useMemo, useState } from "react";
-import { getStudents } from "utilities/pulseApi";
-import type { StudentCardData } from "types/api";
-
 const ScoreRings = () => {
-    const [students, setStudents] = useState<StudentCardData[]>([]);
-
-    useEffect(() => {
-        let mounted = true;
-        const load = async () => {
-            try {
-                const data = await getStudents();
-                if (mounted) setStudents(data);
-            } catch {
-                if (mounted) setStudents([]);
-            }
-        };
-        load();
-        return () => {
-            mounted = false;
-        };
-    }, []);
-
-    const counts = useMemo(
-        () => ({
-            critical: students.filter((s) => s.riskLevel === "CRITICAL").length,
-            high: students.filter((s) => s.riskLevel === "HIGH").length,
-            watch: students.filter((s) => s.riskLevel === "WATCH").length,
-            stable: students.filter((s) => s.riskLevel === "STABLE").length,
-        }),
-        [students]
-    );
+    const counts = {
+        critical: 200,
+        high: 1100,
+        watch: 3400,
+        stable: 15300,
+    };
 
     return (
         <div className="viz-panel full-col">

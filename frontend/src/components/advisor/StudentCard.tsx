@@ -9,6 +9,11 @@ interface Props {
     trend: number;
     riskLevel: RiskLevel;
     week: number;
+    year?: string;
+    major?: string;
+    creditHours?: number;
+    decliningWeeks?: number;
+    dashboardTags?: string[];
 }
 
 const toStatus = (riskLevel: RiskLevel): "critical" | "warning" | "stable" => {
@@ -17,7 +22,20 @@ const toStatus = (riskLevel: RiskLevel): "critical" | "warning" | "stable" => {
     return "stable";
 };
 
-export default function StudentCard({ id, name, course, score, trend, riskLevel, week }: Props) {
+export default function StudentCard({
+    id,
+    name,
+    course,
+    score,
+    trend,
+    riskLevel,
+    week,
+    year,
+    major,
+    creditHours,
+    decliningWeeks,
+    dashboardTags,
+}: Props) {
     const status = toStatus(riskLevel);
     const initials = name
         .split(" ")
@@ -34,12 +52,21 @@ export default function StudentCard({ id, name, course, score, trend, riskLevel,
                 <div className={`avatar av-${status}`}>{initials}</div>
                 <div>
                     <h4 className="card-name">{name}</h4>
-                    <p className="card-meta">Course: {course} · Week {week}</p>
+                    <p className="card-meta">
+                        {year ?? "Student"} · {major ?? course} · {creditHours ?? 0} credits · {decliningWeeks ?? 0} weeks declining
+                    </p>
                     <div className="tag-row">
-                        <span className={`tag ${status === "critical" ? "tag-critical" : "tag-warning"}`}>
-                            {status === "critical" ? "Immediate outreach" : "Needs check-in"}
-                        </span>
-                        <span className="tag tag-neutral">{riskLevel}</span>
+                        {(dashboardTags && dashboardTags.length > 0
+                            ? dashboardTags
+                            : [status === "critical" ? "Immediate outreach" : "Needs check-in", `${course} · Week ${week}`]
+                        ).map((tag) => (
+                            <span
+                                key={`${id}-${tag}`}
+                                className={`tag ${tagClass}`}
+                            >
+                                {tag}
+                            </span>
+                        ))}
                     </div>
                 </div>
             </div>
@@ -49,9 +76,10 @@ export default function StudentCard({ id, name, course, score, trend, riskLevel,
                 <h2 className={`pulse-num ${status}`}>{score}</h2>
                 <p className={`trend-txt ${status}`}>{trendDirection} {trendAmount}% this week</p>
                 <Link to={`/profile/${id}`} className={`btn-sm ${status === "critical" ? "btn-primary" : ""}`}>
-                    View Profile
+                    {status === "critical" ? "Draft Outreach" : "View Profile"}
                 </Link>
             </div>
         </div>
     );
 }
+    const tagClass = status === "critical" ? "tag-critical" : status === "warning" ? "tag-warning" : "tag-neutral";
