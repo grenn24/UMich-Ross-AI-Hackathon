@@ -3,7 +3,9 @@
 ## Setup
 
 ```bash
-pip install -r requirements.txt
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
 uvicorn main:app --reload --port 8000
 ```
 Call the backend server at: https://umich-ross-ai-hackathon-production.up.railway.app\ 

@@ -9,3 +9,8 @@ OCI_CONFIG = {
 }
 
 COMPARTMENT_ID = os.getenv("OCI_COMPARTMENT_ID")
+
+OPENAI_CONFIG = {
+    "api_key": os.getenv("OPENAI_API_KEY"),
+    "model": os.getenv("OPENAI_MODEL", "gpt-5.2-mini"),
+}
