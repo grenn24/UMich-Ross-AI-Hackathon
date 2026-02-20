@@ -1,8 +1,8 @@
+import type { SignalBreakdownItem } from "types/api";
 interface Props {
     title: string;
     score: number;
-    deadlines: number;
-    engagement: number;
+    rows: SignalBreakdownItem[];
 }
-export default function MetricPanel({ title, score, deadlines, engagement }: Props): import("react/jsx-runtime").JSX.Element;
+export default function MetricPanel({ title, score, rows }: Props): import("react/jsx-runtime").JSX.Element;
 export {};

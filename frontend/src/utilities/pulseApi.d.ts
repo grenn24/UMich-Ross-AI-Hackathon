@@ -1,4 +1,4 @@
-import type { ChatbotInsightResponse, CourseSummary, HeatmapResponse, OracleDraftResponse, RefineDraftResponse, StressCauseResponse, StudentCardData, StudentDetail, TrajectoryResponse } from "types/api";
+import type { ChatbotInsightResponse, CompareLanguageResponse, CourseSummary, HeatmapResponse, OracleDraftResponse, OraclePulseCalcResponse, OracleShowcaseResponse, RefineDraftResponse, StressCauseResponse, StudentCardData, StudentDetail, TrajectoryResponse } from "types/api";
 export declare const getStudents: (riskLevel?: string) => Promise<StudentCardData[]>;
 export declare const getStudentById: (studentId: string) => Promise<StudentDetail>;
 export declare const getTrajectory: (studentId: string) => Promise<TrajectoryResponse>;
@@ -8,3 +8,13 @@ export declare const getCourses: () => Promise<CourseSummary[]>;
 export declare const getChatbotInsight: (studentId: string, prompt: string) => Promise<ChatbotInsightResponse>;
 export declare const refineDraft: (studentId: string, currentDraft: string, instruction: string) => Promise<RefineDraftResponse>;
 export declare const getStressCause: (studentId: string) => Promise<StressCauseResponse>;
+export declare const getOracleShowcase: (studentId: string) => Promise<OracleShowcaseResponse>;
+export declare const compareStudentLanguage: (studentId: string) => Promise<CompareLanguageResponse>;
+export declare const calculateOraclePulse: (signals: {
+    submissionTimeliness: number;
+    postFrequency: number;
+    postSentiment: number;
+    loginFrequency: number;
+    peerInteraction: number;
+    gradeTrajectory: number;
+}) => Promise<OraclePulseCalcResponse>;

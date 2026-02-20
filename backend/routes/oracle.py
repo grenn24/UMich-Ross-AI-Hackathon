@@ -458,7 +458,123 @@ def university_heatmap():
                 for row in course["weeklyPressure"]
             ]
         }
-    return {"heatmap": heatmap, "generatedAt": "Week 9, Semester 1"}
+
+    # Student-level heatmap rows for visualization page (target: 200 students x 14 weeks)
+    student_rows = []
+    for i in range(200):
+        student = STUDENTS[i % len(STUDENTS)]
+        weekly = student.get("weeklyData", [])
+        by_week = {row["week"]: row for row in weekly}
+        row_values = []
+        for week in range(1, 15):
+            point = by_week.get(week)
+            if point:
+                pressure = int(point.get("pressure", 50))
+            else:
+                # Deterministic filler for missing weeks while preserving student trend shape
+                tail_pressure = int(weekly[-1]["pressure"]) if weekly else 50
+                pressure = max(0, min(100, tail_pressure + ((week + i) % 7) - 3))
+            row_values.append({
+                "week": week,
+                "pressure": pressure,
+                "riskZone": _pressure_to_zone(pressure),
+            })
+        student_rows.append({
+            "studentId": f"{student['id']}-{i+1:03d}",
+            "name": student["name"],
+            "weeklyPressure": row_values,
+        })
+
+    return {
+        "heatmap": heatmap,
+        "studentHeatmap": student_rows,
+        "generatedAt": "Week 9, Semester 1",
+    }
+
+
+@router.get("/showcase/{student_id}")
+def oracle_showcase(student_id: str):
+    """
+    Composite payload for Oracle Engine screen cards.
+    Returns static-backed, student-specific blocks mirroring the demo UI.
+    """
+    student = next((s for s in STUDENTS if s["id"] == student_id), None)
+    if not student:
+        raise HTTPException(status_code=404, detail=f"Student '{student_id}' not found.")
+
+    pressure_score = 88 if student["id"] == "001" else student.get("currentMetrics", {}).get("pressure", 65)
+    resilience_score = 23 if student["id"] == "001" else student.get("currentMetrics", {}).get("resilience", 40)
+
+    return {
+        "studentId": student_id,
+        "languageService": {
+            "badge": "Oracle AI Language Service",
+            "title": "Linguistic Vitality Analysis",
+            "description": "NLP on Canvas discussion post text",
+            "input": student.get("currentPost", ""),
+            "outputs": [
+                {"key": "Sentiment score", "value": "0.41 — neutral/negative", "tone": "warning"},
+                {"key": "Reading level", "value": "Grade 4 (↓ from 14)", "tone": "critical"},
+                {"key": "Word count", "value": "8 words (↓ from 127)", "tone": "critical"},
+                {"key": "Curiosity markers", "value": "0 (↓ from 3)", "tone": "critical"},
+                {"key": "Intellectual risk", "value": "None detected", "tone": "critical"},
+                {"key": "Vitality change", "value": "↓ 71% from baseline", "tone": "critical"},
+            ],
+            "showProcessing": True,
+            "processingLabel": "Processing NLP analysis...",
+        },
+        "mlService": {
+            "badge": "Oracle ML Services",
+            "title": "Pulse Score Calculator",
+            "description": "Pressure / Resilience ratio model",
+            "formulaText": f"Pulse = ( Resilience ÷ Pressure ) × 100 = ( {resilience_score} ÷ {pressure_score} ) × 100 = 26",
+            "pressureScore": pressure_score,
+            "resilienceScore": resilience_score,
+            "weightedBreakdown": {
+                "pressure": [
+                    {"key": "Deadlines × 30%", "value": "95 × .30 = 28.5", "tone": "critical"},
+                    {"key": "Exams × 25%", "value": "80 × .25 = 20.0", "tone": "warning"},
+                    {"key": "GPA trend × 20%", "value": "75 × .20 = 15.0", "tone": "warning"},
+                ],
+                "resilience": [
+                    {"key": "Linguistic × 25%", "value": "20 × .25 = 5.0", "tone": "critical"},
+                    {"key": "Sleep × 25%", "value": "15 × .25 = 3.75", "tone": "critical"},
+                    {"key": "Social × 20%", "value": "18 × .20 = 3.6", "tone": "critical"},
+                ],
+            },
+        },
+        "databaseService": {
+            "badge": "Oracle Autonomous Database",
+            "title": "Behavioral Fingerprint",
+            "description": "Personal baseline vs. current deviation",
+            "baselineLabel": f"{student['name'].split()[0]} — Week 1-3 Baseline",
+            "deviationLabel": "Week 8 — Deviation",
+            "baseline": student.get("behavioralBaseline", {}),
+            "deviation": student.get("behavioralDeviation", {}),
+        },
+        "assistantService": {
+            "badge": "Oracle Digital Assistant",
+            "title": "Personalized Outreach",
+            "description": "Context-aware email generation",
+            "context": [
+                {"key": "Strongest moment", "value": "Week 2 behavioral econ", "tone": "accent"},
+                {"key": "Pressure trigger", "value": "4 deadlines Nov 14", "tone": "critical"},
+                {"key": "Tone", "value": "Warm, human, non-clinical", "tone": "accent"},
+                {"key": "Avoid", "value": "AI scores, monitoring", "tone": "neutral"},
+            ],
+            "emailPreview": (
+                f"Hi {student['name'].split()[0]}, I was looking back at your behavioral economics post "
+                "from a few weeks ago — your perspective on loss aversion was genuinely insightful. "
+                "I have office hours Thursday 2–4pm if you'd like to stop by."
+            ),
+        },
+        "scaleStats": [
+            {"value": "14M", "label": "Data points per semester"},
+            {"value": "47", "label": "Behavioral variables tracked"},
+            {"value": "3s", "label": "Full university analysis"},
+            {"value": "4wk", "label": "Earlier than human detection"},
+        ],
+    }
 
 
 # ── Private helpers ───────────────────────────────────────────────────────────
@@ -539,32 +655,37 @@ def _openai_chat(prompt: str, max_tokens: int = 320, temperature: float = 0.4):
 
 
 def _openai_text(prompt: str, max_output_tokens: int = 320, temperature: float = 0.4):
-    model = os.getenv("OPENAI_MODEL", "gpt-5.2-mini")
+    primary_model = os.getenv("OPENAI_MODEL", "gpt-5.2")
+    fallback_model = os.getenv("OPENAI_FALLBACK_MODEL", "gpt-5.2-mini")
     if not os.getenv("OPENAI_API_KEY"):
-        return None, "Missing OPENAI_API_KEY.", model
+        return None, "Missing OPENAI_API_KEY.", primary_model
 
-    try:
-        response = openai_client.responses.create(
-            model=model,
-            input=prompt,
-            temperature=temperature,
-            max_output_tokens=max_output_tokens,
-        )
+    last_error = None
+    for model in [primary_model, fallback_model]:
+        try:
+            response = openai_client.responses.create(
+                model=model,
+                input=prompt,
+                temperature=temperature,
+                max_output_tokens=max_output_tokens,
+            )
 
-        output_text = getattr(response, "output_text", None)
-        if output_text and str(output_text).strip():
-            return str(output_text).strip(), None, model
+            output_text = getattr(response, "output_text", None)
+            if output_text and str(output_text).strip():
+                return str(output_text).strip(), None, model
 
-        if getattr(response, "output", None):
-            for item in response.output:
-                for content in getattr(item, "content", []) or []:
-                    text = getattr(content, "text", None)
-                    if text and str(text).strip():
-                        return str(text).strip(), None, model
+            if getattr(response, "output", None):
+                for item in response.output:
+                    for content in getattr(item, "content", []) or []:
+                        text = getattr(content, "text", None)
+                        if text and str(text).strip():
+                            return str(text).strip(), None, model
 
-        return None, "OpenAI response had no text output.", model
-    except Exception as error:
-        return None, f"OpenAI request failed: {str(error)[:220]}", model
+            last_error = "OpenAI response had no text output."
+        except Exception as error:
+            last_error = f"OpenAI request failed on {model}: {str(error)[:180]}"
+
+    return None, last_error or "OpenAI request failed.", primary_model
 
 
 def _extract_json(text: str):

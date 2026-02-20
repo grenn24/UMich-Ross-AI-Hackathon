@@ -7,6 +7,11 @@ interface Props {
     trend: number;
     riskLevel: RiskLevel;
     week: number;
+    year?: string;
+    major?: string;
+    creditHours?: number;
+    decliningWeeks?: number;
+    dashboardTags?: string[];
 }
-export default function StudentCard({ id, name, course, score, trend, riskLevel, week }: Props): import("react/jsx-runtime").JSX.Element;
+export default function StudentCard({ id, name, course, score, trend, riskLevel, week, year, major, creditHours, decliningWeeks, dashboardTags, }: Props): import("react/jsx-runtime").JSX.Element;
 export {};

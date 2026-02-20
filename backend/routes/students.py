@@ -80,6 +80,19 @@ def get_signals(student_id: str):
     }
 
 
+@router.get("/{student_id}/language-drift")
+def get_language_drift(student_id: str):
+    """Return student writing baseline vs current drift block."""
+    student = next((s for s in STUDENTS if s["id"] == student_id), None)
+    if not student:
+        raise HTTPException(status_code=404, detail=f"Student '{student_id}' not found")
+    return {
+        "studentId": student_id,
+        "languageBaseline": student.get("languageBaseline"),
+        "languageCurrent": student.get("languageCurrent"),
+    }
+
+
 @router.post("/calculate-pulse")
 def calculate_pulse(body: dict):
     """

@@ -4,14 +4,15 @@ import ProfileHeader from "components/profile/ProfileHeader";
 import MetricsGrid from "components/profile/MetricsGrid";
 import TrajectoryChart from "../components/profile/TrajectoryChart";
 import OraclePanel from "../components/profile/OraclePanel";
-import { getStudentById, getStudents, getTrajectory } from "utilities/pulseApi";
-import type { StudentDetail, WeeklyDataPoint } from "types/api";
+import ChatbotInsightHero from "components/profile/ChatbotInsightHero";
+import LanguageDriftPanel from "components/profile/LanguageDriftPanel";
+import { getStudentById, getStudents } from "utilities/pulseApi";
+import type { StudentDetail } from "types/api";
 
 export default function StudentProfile() {
     const { studentId } = useParams();
     const navigate = useNavigate();
     const [student, setStudent] = useState<StudentDetail | null>(null);
-    const [weeklyData, setWeeklyData] = useState<WeeklyDataPoint[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -30,13 +31,9 @@ export default function StudentProfile() {
                 }
                 if (!targetId) throw new Error("No students available.");
 
-                const [studentResponse, trajectoryResponse] = await Promise.all([
-                    getStudentById(targetId),
-                    getTrajectory(targetId),
-                ]);
+                const studentResponse = await getStudentById(targetId);
                 if (mounted) {
                     setStudent(studentResponse);
-                    setWeeklyData(trajectoryResponse.weeklyData);
                     setError(null);
                 }
             } catch {
@@ -57,17 +54,13 @@ export default function StudentProfile() {
 
     return (
         <section className="page-shell profile-wrap">
-            <div className="page-hdr">
-                <div>
-                    <h1 className="page-title">Student Profile</h1>
-                    <p className="page-sub">Deep signals and recommended intervention content</p>
-                </div>
-                <div className="week-chip">{student.name} · Week {student.currentWeek}</div>
-            </div>
+            <button className="back-link" onClick={() => navigate("/")}>← Back to Dashboard</button>
 
             <ProfileHeader student={student} />
+            <ChatbotInsightHero studentId={student.id} />
             <MetricsGrid student={student} />
-            <TrajectoryChart weeklyData={weeklyData} studentId={student.id} />
+            <TrajectoryChart studentId={student.id} />
+            <LanguageDriftPanel student={student} />
             <OraclePanel student={student} />
         </section>
     );
