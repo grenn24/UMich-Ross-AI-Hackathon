@@ -68,6 +68,21 @@ export default function AdvisorDashboard() {
         [visible]
     );
 
+    const sections = useMemo(
+        () => [
+            { key: "critical", label: "Critical - Act Today", labelClass: "critical-txt", students: grouped.critical },
+            { key: "high", label: "High Risk - Reach Out This Week", labelClass: "warning-txt", students: grouped.high },
+            { key: "watch", label: "Watch - Monitor", labelClass: "watch-txt", students: grouped.watch },
+            { key: "stable", label: "Stable - Keep Momentum", labelClass: "stable-txt", students: grouped.stable },
+        ],
+        [grouped]
+    );
+
+    const visibleSections = useMemo(() => {
+        if (filter === "all") return sections;
+        return sections.filter((section) => section.key === filter);
+    }, [sections, filter]);
+
     return (
         <section className="page-shell advisor-layout">
             <Sidebar filter={filter} onFilterChange={setFilter} counts={counts} />
@@ -96,92 +111,30 @@ export default function AdvisorDashboard() {
                 {!loading && !error && visible.length === 0 && <p>No students match your filter/search.</p>}
                 {!loading && !error && (
                     <>
-                        <div className="section-row">
-                            <span className="section-label critical-txt">Critical - Act Today</span>
-                            <span className="section-line" />
-                        </div>
-                        {grouped.critical.map((student) => (
-                            <StudentCard
-                                key={student.id}
-                                id={student.id}
-                                name={student.name}
-                                course={student.course}
-                                score={student.pulseScore}
-                                trend={student.pulseTrend}
-                                riskLevel={student.riskLevel}
-                                week={student.currentWeek}
-                                year={student.year}
-                                major={student.major}
-                                creditHours={student.creditHours}
-                                decliningWeeks={student.decliningWeeks}
-                                dashboardTags={student.dashboardTags}
-                            />
-                        ))}
-
-                        <div className="section-row">
-                            <span className="section-label warning-txt">High Risk - Reach Out This Week</span>
-                            <span className="section-line" />
-                        </div>
-                        {grouped.high.map((student) => (
-                            <StudentCard
-                                key={student.id}
-                                id={student.id}
-                                name={student.name}
-                                course={student.course}
-                                score={student.pulseScore}
-                                trend={student.pulseTrend}
-                                riskLevel={student.riskLevel}
-                                week={student.currentWeek}
-                                year={student.year}
-                                major={student.major}
-                                creditHours={student.creditHours}
-                                decliningWeeks={student.decliningWeeks}
-                                dashboardTags={student.dashboardTags}
-                            />
-                        ))}
-
-                        <div className="section-row">
-                            <span className="section-label watch-txt">Watch - Monitor</span>
-                            <span className="section-line" />
-                        </div>
-                        {grouped.watch.map((student) => (
-                            <StudentCard
-                                key={student.id}
-                                id={student.id}
-                                name={student.name}
-                                course={student.course}
-                                score={student.pulseScore}
-                                trend={student.pulseTrend}
-                                riskLevel={student.riskLevel}
-                                week={student.currentWeek}
-                                year={student.year}
-                                major={student.major}
-                                creditHours={student.creditHours}
-                                decliningWeeks={student.decliningWeeks}
-                                dashboardTags={student.dashboardTags}
-                            />
-                        ))}
-
-                        <div className="section-row">
-                            <span className="section-label stable-txt">Stable - Keep Momentum</span>
-                            <span className="section-line" />
-                        </div>
-                        {grouped.stable.map((student) => (
-                            <StudentCard
-                                key={student.id}
-                                id={student.id}
-                                name={student.name}
-                                course={student.course}
-                                score={student.pulseScore}
-                                trend={student.pulseTrend}
-                                riskLevel={student.riskLevel}
-                                week={student.currentWeek}
-                                year={student.year}
-                                major={student.major}
-                                creditHours={student.creditHours}
-                                decliningWeeks={student.decliningWeeks}
-                                dashboardTags={student.dashboardTags}
-                            />
+                        {visibleSections.map((section) => (
+                            <div key={section.key}>
+                                <div className="section-row">
+                                    <span className={`section-label ${section.labelClass}`}>{section.label}</span>
+                                    <span className="section-line" />
+                                </div>
+                                {section.students.map((student) => (
+                                    <StudentCard
+                                        key={student.id}
+                                        id={student.id}
+                                        name={student.name}
+                                        course={student.course}
+                                        score={student.pulseScore}
+                                        trend={student.pulseTrend}
+                                        riskLevel={student.riskLevel}
+                                        week={student.currentWeek}
+                                        year={student.year}
+                                        major={student.major}
+                                        creditHours={student.creditHours}
+                                        decliningWeeks={student.decliningWeeks}
+                                        dashboardTags={student.dashboardTags}
+                                    />
+                                ))}
+                            </div>
                         ))}
                     </>
                 )}
