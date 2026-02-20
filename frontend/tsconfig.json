@@ -1,0 +1,40 @@
+{
+	"compilerOptions": {
+		"paths": {
+			"*": ["./src/*"],
+			"@common/*": ["../common/*"],
+			"@backend/*": ["../backend/*"],
+			"@styles/*": ["./src/assets/styles/*"]
+		},
+		"types": ["redux-persist/types"],
+		"tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+		"target": "ES2024",
+		"useDefineForClassFields": true,
+		"lib": ["ES2020", "DOM", "DOM.Iterable"],
+		"module": "ESNext",
+		"skipLibCheck": true,
+		"strictNullChecks": true,
+
+		"composite": true,
+
+		/* Bundler mode */
+		"moduleResolution": "bundler",
+		"allowImportingTsExtensions": true,
+		"isolatedModules": true,
+		"moduleDetection": "force",
+		"resolveJsonModule": true,
+		"noEmit": false,
+		"emitDeclarationOnly": true,
+		"jsx": "react-jsx",
+
+		/* Linting */
+		//"strict": true,
+		"noUnusedLocals": false,
+		"noUnusedParameters": false,
+		"noFallthroughCasesInSwitch": true,
+		"noUncheckedSideEffectImports": true
+	},
+	"include": ["src"],
+	"exclude": ["node_modules"],
+	"references": [{ "path": "../common" }]
+}
