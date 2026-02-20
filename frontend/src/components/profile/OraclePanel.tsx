@@ -88,9 +88,31 @@ export default function OraclePanel({ student }: Props) {
                         value={refineInput}
                         onChange={(event) => setRefineInput(event.target.value)}
                     />
-                    <button className="btn-sm btn-primary" onClick={handleRefine} disabled={refining || !refineInput.trim()}>
-                        {refining ? "Refining..." : "Apply AI Refinement"}
+                    <button
+                        className={`btn-sm btn-primary ${refining ? "btn-refining" : ""}`}
+                        onClick={handleRefine}
+                        disabled={refining || !refineInput.trim()}
+                    >
+                        {refining ? (
+                            <span className="refine-btn-content">
+                                <span className="refine-btn-spinner" aria-hidden="true" />
+                                Refining Draft...
+                            </span>
+                        ) : (
+                            "Apply AI Refinement"
+                        )}
                     </button>
+                    {refining && (
+                        <div className="ai-refine-loading" role="status" aria-live="polite">
+                            <div className="ai-refine-head">
+                                <span className="ai-refine-dot" aria-hidden="true" />
+                                AI is improving tone, structure, and clarity
+                            </div>
+                            <div className="ai-refine-track" aria-hidden="true">
+                                <span className="ai-refine-progress" />
+                            </div>
+                        </div>
+                    )}
                     <button className="btn-sm" onClick={handleSaveEdits} disabled={!editedDraft.trim()}>
                         Save Manual Edits
                     </button>
