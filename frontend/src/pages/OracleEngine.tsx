@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import OracleServiceCard from "components/oracle/OracleServiceCard";
 import { calculateOraclePulse, compareStudentLanguage, generateOracleDraft, getOracleShowcase, refineDraft } from "utilities/pulseApi";
 import type { OracleShowcaseResponse } from "types/api";
+import InlineLoader from "components/common/InlineLoader";
 
 const fallbackShowcase: OracleShowcaseResponse = {
     studentId: "001",
@@ -267,6 +268,9 @@ export default function OracleEngine() {
                             {refining ? "Applying..." : "Apply AI Refine"}
                         </button>
                     </div>
+                    {(draftLoading || refining) && (
+                        <InlineLoader label={draftLoading ? "Regenerating advisor draft..." : "Applying AI refinement..."} />
+                    )}
                     {assistantError && <p className="cause-paragraph">{assistantError}</p>}
                 </div>
             </div>

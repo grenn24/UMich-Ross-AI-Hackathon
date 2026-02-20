@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getChatbotInsight } from "utilities/pulseApi";
+import InlineLoader from "components/common/InlineLoader";
 
 interface Props {
     studentId: string;
@@ -35,6 +36,7 @@ export default function ChatbotInsightHero({ studentId }: Props) {
             <p className="insight-hero-text">
                 {loading ? "Generating insight..." : insight}
             </p>
+            {loading && <InlineLoader label="Analyzing student trajectory..." />}
             <button className="btn-sm btn-primary" onClick={loadInsight} disabled={loading}>
                 {loading ? "Refreshing..." : "Refresh Insight"}
             </button>

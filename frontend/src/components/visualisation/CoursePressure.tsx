@@ -1,18 +1,23 @@
 import { useEffect, useMemo, useState } from "react";
 import { getCourses } from "utilities/pulseApi";
 import type { CourseSummary } from "types/api";
+import InlineLoader from "components/common/InlineLoader";
 
 const CoursePressure = () => {
     const [courses, setCourses] = useState<CourseSummary[]>([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         let mounted = true;
         const load = async () => {
             try {
+                setLoading(true);
                 const response = await getCourses();
                 if (mounted) setCourses(response);
             } catch {
                 if (mounted) setCourses([]);
+            } finally {
+                if (mounted) setLoading(false);
             }
         };
         load();
@@ -37,6 +42,7 @@ const CoursePressure = () => {
     return (
         <div className="viz-panel">
             <h3 className="panel-title">Course Pressure - ECON Department - Week 8</h3>
+            {loading && <InlineLoader label="Loading course pressure..." />}
             {topCourses.map((course) => {
                 const cls = course.peakPressure >= 80 ? "fill-red" : course.peakPressure >= 60 ? "fill-orange" : "fill-green";
                 const txtCls = course.peakPressure >= 80 ? "critical-txt" : course.peakPressure >= 60 ? "warning-txt" : "stable-txt";

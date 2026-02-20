@@ -1,15 +1,18 @@
 import { useEffect, useMemo, useState } from "react";
 import { getUniversityHeatmap } from "utilities/pulseApi";
 import type { HeatmapResponse } from "types/api";
+import InlineLoader from "components/common/InlineLoader";
 
 const Heatmap = () => {
     const [heatmap, setHeatmap] = useState<HeatmapResponse["heatmap"]>({});
     const [studentHeatmap, setStudentHeatmap] = useState<NonNullable<HeatmapResponse["studentHeatmap"]>>([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         let mounted = true;
         const load = async () => {
             try {
+                setLoading(true);
                 const response = await getUniversityHeatmap();
                 if (mounted) {
                     setHeatmap(response.heatmap);
@@ -20,6 +23,8 @@ const Heatmap = () => {
                     setHeatmap({});
                     setStudentHeatmap([]);
                 }
+            } finally {
+                if (mounted) setLoading(false);
             }
         };
         load();
@@ -72,6 +77,7 @@ const Heatmap = () => {
     return (
         <div className="viz-panel">
             <h3 className="panel-title">Student Wellness Heatmap - All Students by Week</h3>
+            {loading && <InlineLoader label="Loading wellness heatmap..." />}
             <div className="heatmap-wrap">
                 <div className="hm-labels">
                     {weeks.map((week) => (

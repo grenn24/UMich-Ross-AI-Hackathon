@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { generateOracleDraft, refineDraft } from "utilities/pulseApi";
 import type { StudentDetail } from "types/api";
+import InlineLoader from "components/common/InlineLoader";
 
 interface Props {
     student: StudentDetail;
@@ -70,7 +71,8 @@ export default function OraclePanel({ student }: Props) {
 
             <div className="email-editor-layout">
                 <div className="email-editor-main">
-                    <div className="email-to">To: {recipient} · Subject: Checking in — how are you?</div>
+                    <div className="email-to">To: {recipient} - Subject: Checking in - how are you?</div>
+                    {loading && <InlineLoader label="Generating outreach draft..." />}
                     <textarea
                         className="email-editor"
                         value={loading ? "Generating draft..." : editedDraft}
