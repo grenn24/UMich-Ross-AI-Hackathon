@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Sidebar from "components/advisor/Sidebar";
 import StudentCard from "components/advisor/StudentCard";
+import Loading from "./Loading";
 import { getStudents } from "utilities/pulseApi";
 import type { StudentCardData } from "types/api";
 
@@ -67,7 +68,7 @@ export default function AdvisorDashboard() {
                     <div className="week-chip">Week 8 of 14 · Nov 14, 2024</div>
                 </div>
 
-                {loading && <p>Loading students...</p>}
+                {loading && <Loading />}
                 {error && <p>{error}</p>}
                 {!loading && !error && visible.length === 0 && <p>No students match the selected filter.</p>}
                 {!loading && !error && (

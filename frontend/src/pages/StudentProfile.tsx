@@ -6,6 +6,7 @@ import TrajectoryChart from "../components/profile/TrajectoryChart";
 import OraclePanel from "../components/profile/OraclePanel";
 import ChatbotInsightHero from "components/profile/ChatbotInsightHero";
 import LanguageDriftPanel from "components/profile/LanguageDriftPanel";
+import Loading from "./Loading";
 import { getStudentById, getStudents } from "utilities/pulseApi";
 import type { StudentDetail } from "types/api";
 
@@ -49,7 +50,7 @@ export default function StudentProfile() {
         };
     }, [studentId, navigate]);
 
-    if (loading) return <section className="page-shell profile-wrap"><p>Loading student profile...</p></section>;
+    if (loading) return <section className="page-shell profile-wrap"><Loading /></section>;
     if (error || !student) return <section className="page-shell profile-wrap"><p>{error ?? "Student not found."}</p></section>;
 
     return (
