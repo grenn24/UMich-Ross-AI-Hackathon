@@ -724,6 +724,18 @@ body {
 
 .profile-wrap {
   max-width: none;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.profile-wrap .profile-top,
+.profile-wrap .insight-hero,
+.profile-wrap .two-col,
+.profile-wrap .chart-panel,
+.profile-wrap .panel,
+.profile-wrap .oracle-panel {
+  margin-bottom: 0;
 }
 
 .back-link {
@@ -1171,7 +1183,7 @@ body {
 .email-editor-layout {
   display: grid;
   grid-template-columns: 1.8fr 1fr;
-  gap: 12px;
+  gap: 20px;
   align-items: start;
 }
 
@@ -1189,6 +1201,7 @@ body {
   padding: 10px;
   position: sticky;
   top: 78px;
+  box-shadow: inset 0 0 0 1px rgba(26, 86, 219, 0.08);
 }
 
 .email-editor {
