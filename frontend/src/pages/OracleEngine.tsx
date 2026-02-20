@@ -2,51 +2,52 @@ import { useEffect, useState } from "react";
 import OracleServiceCard from "components/oracle/OracleServiceCard";
 import { calculateOraclePulse, compareStudentLanguage, generateOracleDraft, getOracleShowcase, refineDraft } from "utilities/pulseApi";
 import type { OracleShowcaseResponse } from "types/api";
+import InlineLoader from "components/common/InlineLoader";
 
 const fallbackShowcase: OracleShowcaseResponse = {
     studentId: "001",
     languageService: {
-        badge: "Oracle AI Language Service",
-        title: "Linguistic Vitality Analysis",
-        description: "NLP on Canvas discussion post text",
+        badge: "PulseAI SignalSense Studio",
+        title: "LexiScope Narrative Intelligence",
+        description: "Discourse intelligence on Canvas discussion text",
         input: "I agree with what was said above.",
         outputs: [
-            { key: "Sentiment score", value: "0.41 — neutral/negative", tone: "warning" },
-            { key: "Reading level", value: "Grade 4 (↓ from 14)", tone: "critical" },
-            { key: "Word count", value: "8 words (↓ from 127)", tone: "critical" },
-            { key: "Curiosity markers", value: "0 (↓ from 3)", tone: "critical" },
+            { key: "Sentiment score", value: "0.41 - neutral/negative", tone: "warning" },
+            { key: "Reading level", value: "Grade 4 (down from 14)", tone: "critical" },
+            { key: "Word count", value: "8 words (down from 127)", tone: "critical" },
+            { key: "Curiosity markers", value: "0 (down from 3)", tone: "critical" },
             { key: "Intellectual risk", value: "None detected", tone: "critical" },
-            { key: "Vitality change", value: "↓ 71% from baseline", tone: "critical" },
+            { key: "Vitality change", value: "down 71% from baseline", tone: "critical" },
         ],
         showProcessing: true,
-        processingLabel: "Processing NLP analysis...",
+        processingLabel: "Processing narrative intelligence...",
     },
     mlService: {
-        badge: "Oracle ML Services",
-        title: "Pulse Score Calculator",
-        description: "Pressure / Resilience ratio model",
-        formulaText: "Pulse = ( Resilience ÷ Pressure ) × 100 = ( 23 ÷ 88 ) × 100 = 26",
+        badge: "PulseAI Forecast Matrix",
+        title: "Aegis Pulse Index",
+        description: "Multivariate pressure-resilience inference model",
+        formulaText: "Pulse = ( Resilience / Pressure ) x 100 = ( 23 / 88 ) x 100 = 26",
         pressureScore: 88,
         resilienceScore: 23,
         weightedBreakdown: {
             pressure: [
-                { key: "Deadlines × 30%", value: "95 × .30 = 28.5", tone: "critical" },
-                { key: "Exams × 25%", value: "80 × .25 = 20.0", tone: "warning" },
-                { key: "GPA trend × 20%", value: "75 × .20 = 15.0", tone: "warning" },
+                { key: "Deadlines x 30%", value: "95 x .30 = 28.5", tone: "critical" },
+                { key: "Exams x 25%", value: "80 x .25 = 20.0", tone: "warning" },
+                { key: "GPA trend x 20%", value: "75 x .20 = 15.0", tone: "warning" },
             ],
             resilience: [
-                { key: "Linguistic × 25%", value: "20 × .25 = 5.0", tone: "critical" },
-                { key: "Sleep × 25%", value: "15 × .25 = 3.75", tone: "critical" },
-                { key: "Social × 20%", value: "18 × .20 = 3.6", tone: "critical" },
+                { key: "Linguistic x 25%", value: "20 x .25 = 5.0", tone: "critical" },
+                { key: "Sleep x 25%", value: "15 x .25 = 3.75", tone: "critical" },
+                { key: "Social x 20%", value: "18 x .20 = 3.6", tone: "critical" },
             ],
         },
     },
     databaseService: {
-        badge: "Oracle Autonomous Database",
-        title: "Behavioral Fingerprint",
-        description: "Personal baseline vs. current deviation",
-        baselineLabel: "Maya — Week 1-3 Baseline",
-        deviationLabel: "Week 8 — Deviation",
+        badge: "PulseAI Chronicle Vault",
+        title: "Behavioral Signature Mapping",
+        description: "Personal baseline versus current deviation",
+        baselineLabel: "Maya - Week 1-3 Baseline",
+        deviationLabel: "Week 8 - Deviation",
         baseline: {
             "Avg login hour": "11:24 AM",
             "Submission hour": "2:15 PM Tues",
@@ -54,16 +55,16 @@ const fallbackShowcase: OracleShowcaseResponse = {
             "Peer reply rate": "4.2 / week",
         },
         deviation: {
-            "Login hour": "2:47 AM ↑15.5 hrs",
+            "Login hour": "2:47 AM up 15.5 hrs",
             "Submission hour": "11:58 PM Sun",
-            "Post word count": "8 words ↓94%",
+            "Post word count": "8 words down 94%",
             "Anomaly flag": "5 signals concurrent",
         },
     },
     assistantService: {
-        badge: "Oracle Digital Assistant",
-        title: "Personalized Outreach",
-        description: "Context-aware email generation",
+        badge: "PulseAI Concierge Copilot",
+        title: "Empathic Outreach Composer",
+        description: "Context-steered advisor messaging orchestration",
         context: [
             { key: "Strongest moment", value: "Week 2 behavioral econ", tone: "accent" },
             { key: "Pressure trigger", value: "4 deadlines Nov 14", tone: "critical" },
@@ -71,7 +72,7 @@ const fallbackShowcase: OracleShowcaseResponse = {
             { key: "Avoid", value: "AI scores, monitoring", tone: "neutral" },
         ],
         emailPreview:
-            "Hi Maya, I was looking back at your behavioral economics post from a few weeks ago — your perspective on loss aversion was genuinely insightful. I have office hours Thursday 2–4pm if you'd like to stop by.",
+            "Hi Maya, I was looking back at your behavioral economics post from a few weeks ago - your perspective on loss aversion was genuinely insightful. I have office hours Thursday 2-4pm if you'd like to stop by.",
     },
     scaleStats: [
         { value: "14M", label: "Data points per semester" },
@@ -113,7 +114,7 @@ export default function OracleEngine() {
                             ...response.languageService,
                             input: language.current.text,
                             outputs: [
-                                { key: "Sentiment score", value: `${(language.current.scores.sentiment / 100).toFixed(2)} — neutral/negative`, tone: "warning" },
+                                { key: "Sentiment score", value: `${(language.current.scores.sentiment / 100).toFixed(2)} - neutral/negative`, tone: "warning" },
                                 { key: "Reading level", value: `Complexity ${language.current.scores.complexity}`, tone: "critical" },
                                 { key: "Word count", value: `${language.current.text.split(/\s+/).filter(Boolean).length} words`, tone: "critical" },
                                 { key: "Curiosity markers", value: `${language.current.scores.curiosity}`, tone: "critical" },
@@ -122,16 +123,16 @@ export default function OracleEngine() {
                         },
                         mlService: {
                             ...response.mlService,
-                            formulaText: `Oracle ML Pulse = ${pulse.pulseScore} (${pulse.riskLevel})`,
+                            formulaText: `PulseAI Forecast = ${pulse.pulseScore} (${pulse.riskLevel})`,
                             weightedBreakdown: {
                                 pressure: pulse.breakdown.slice(0, 3).map((b) => ({
-                                    key: `${b.signal} × ${(b.weight * 100).toFixed(0)}%`,
-                                    value: `${b.rawScore} × ${b.weight.toFixed(2)} = ${b.contribution}`,
+                                    key: `${b.signal} x ${(b.weight * 100).toFixed(0)}%`,
+                                    value: `${b.rawScore} x ${b.weight.toFixed(2)} = ${b.contribution}`,
                                     tone: b.rawScore < 40 ? "critical" : "warning",
                                 })),
                                 resilience: pulse.breakdown.slice(3).map((b) => ({
-                                    key: `${b.signal} × ${(b.weight * 100).toFixed(0)}%`,
-                                    value: `${b.rawScore} × ${b.weight.toFixed(2)} = ${b.contribution}`,
+                                    key: `${b.signal} x ${(b.weight * 100).toFixed(0)}%`,
+                                    value: `${b.rawScore} x ${b.weight.toFixed(2)} = ${b.contribution}`,
                                     tone: b.rawScore < 40 ? "critical" : "warning",
                                 })),
                             },
@@ -185,8 +186,8 @@ export default function OracleEngine() {
         <section className="page-shell">
             <div className="page-hdr">
                 <div>
-                    <h1 className="page-title">Oracle AI Engine</h1>
-                    <p className="page-sub">How Oracle AI Cloud powers each layer of PulseAI</p>
+                    <h1 className="page-title">PulseAI Intelligence Studio</h1>
+                    <p className="page-sub">How PulseAI powers each intelligence layer in student wellness operations</p>
                 </div>
             </div>
 
@@ -195,7 +196,7 @@ export default function OracleEngine() {
                     badge={showcase.languageService.badge}
                     title={showcase.languageService.title}
                     description={showcase.languageService.description}
-                    inputLabel="Input — Maya's Week 8 post"
+                    inputLabel="Input - Maya's Week 8 post"
                     input={showcase.languageService.input}
                     outputs={showcase.languageService.outputs}
                     showProcessing={showcase.languageService.showProcessing}
@@ -230,7 +231,7 @@ export default function OracleEngine() {
                         <p className="svc-desc">{showcase.assistantService.description}</p>
                     </div>
 
-                    <div className="io-label">Context fed to Oracle</div>
+                    <div className="io-label">Context fed to PulseAI</div>
                     <div className="io-output split-top">
                         {showcase.assistantService.context.map((row) => (
                             <div key={row.key} className="out-row">
@@ -240,7 +241,7 @@ export default function OracleEngine() {
                         ))}
                     </div>
 
-                    <div className="io-label">Generated email — editable</div>
+                    <div className="io-label">Generated email - editable</div>
                     <div className="email-editor-main">
                         <textarea
                             className="email-editor"
@@ -267,6 +268,9 @@ export default function OracleEngine() {
                             {refining ? "Applying..." : "Apply AI Refine"}
                         </button>
                     </div>
+                    {(draftLoading || refining) && (
+                        <InlineLoader label={draftLoading ? "Regenerating advisor draft..." : "Applying AI refinement..."} />
+                    )}
                     {assistantError && <p className="cause-paragraph">{assistantError}</p>}
                 </div>
             </div>

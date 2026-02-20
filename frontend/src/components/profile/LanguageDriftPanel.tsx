@@ -9,7 +9,7 @@ export default function LanguageDriftPanel({ student }: Props) {
 
     return (
         <div className="panel">
-            <div className="panel-title">Oracle AI Language — Writing Voice Drift</div>
+            <div className="panel-title">PulseAI Voiceprint Atlas - Writing Drift</div>
             <div className="ling-grid">
                 <div className="ling-card healthy">
                     <div className="ling-week healthy">{student.languageBaseline.title}</div>

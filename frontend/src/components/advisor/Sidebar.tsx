@@ -31,7 +31,7 @@ export default function Sidebar({ filter, onFilterChange, counts }: Props) {
             </div>
 
             <div className="sidebar-section">
-                <div className="sidebar-label">Oracle AI</div>
+                <div className="sidebar-label">PulseAI Nexus</div>
                 <div className="oracle-side-box">
                     <div className="oracle-side-lbl">Last processed</div>
                     <div className="oracle-side-time">Today 6:00 AM</div>

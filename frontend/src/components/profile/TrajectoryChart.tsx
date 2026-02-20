@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getChatbotInsight } from "utilities/pulseApi";
+import InlineLoader from "components/common/InlineLoader";
 
 interface Props {
     studentId: string;
@@ -54,6 +55,7 @@ export default function TrajectoryChart({ studentId }: Props) {
                     {loading ? "Thinking..." : "Ask Chatbot"}
                 </button>
             </div>
+            {loading && <InlineLoader label="Generating insight response..." />}
 
             {error && <p className="cause-paragraph chart-insight">{error}</p>}
 

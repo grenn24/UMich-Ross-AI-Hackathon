@@ -5,7 +5,7 @@ import os
 
 app = FastAPI(
     title="Student Pulse API",
-    description="Backend for the Student Pulse academic wellness platform. Powered by Oracle AI mock integrations.",
+    description="Backend for the Student Pulse academic wellness platform. Powered by PulseAI mock integrations.",
     version="1.0.0"
 )
 
@@ -33,7 +33,7 @@ app.add_middleware(
 )
 
 app.include_router(students.router, prefix="/api/students", tags=["Students"])
-app.include_router(oracle.router,   prefix="/api/oracle",   tags=["Oracle AI"])
+app.include_router(oracle.router,   prefix="/api/oracle",   tags=["PulseAI"])
 app.include_router(courses.router,  prefix="/api/courses",  tags=["Courses"])
 
 
