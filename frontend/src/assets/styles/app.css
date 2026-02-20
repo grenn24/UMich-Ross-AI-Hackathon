@@ -564,6 +564,17 @@
 	color: var(--critical);
 }
 
+.predicted-stress-chip {
+	margin-top: 8px;
+	font-size: 11px;
+	color: var(--text-2);
+	background: var(--warning-light);
+	border: 1px solid var(--warning-border);
+	border-radius: 14px;
+	padding: 3px 10px;
+	display: inline-block;
+}
+
 .two-col {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
@@ -654,6 +665,10 @@
 	border-bottom: 1px solid var(--border);
 }
 
+.oracle-hdr-sub {
+	margin-top: 16px;
+}
+
 .oracle-badge {
 	background: var(--accent-light);
 	border: 1px solid #c7d7f9;
@@ -699,6 +714,102 @@
 	display: flex;
 	gap: 8px;
 	margin-top: 12px;
+}
+
+.cause-bars {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	margin-bottom: 10px;
+}
+
+.cause-row {
+	display: grid;
+	grid-template-columns: 1.3fr 2.4fr auto;
+	gap: 8px;
+	align-items: center;
+}
+
+.cause-label {
+	font-size: 12px;
+	color: var(--text-2);
+}
+
+.cause-track {
+	height: 7px;
+	background: var(--bg);
+	border-radius: 4px;
+	overflow: hidden;
+}
+
+.cause-fill {
+	height: 100%;
+	background: linear-gradient(90deg, #f88f76 0%, #d93025 100%);
+}
+
+.cause-val {
+	font-size: 11px;
+	color: var(--text-3);
+	font-family: "IBM Plex Mono", monospace;
+}
+
+.cause-paragraph {
+	font-size: 12px;
+	color: var(--text-2);
+	line-height: 1.45;
+}
+
+.refine-box {
+	margin-top: 14px;
+	border-top: 1px solid var(--bg);
+	padding-top: 12px;
+}
+
+.refine-input {
+	width: 100%;
+	min-height: 70px;
+	resize: vertical;
+	border: 1px solid var(--border);
+	border-radius: 6px;
+	padding: 8px 10px;
+	font-size: 12px;
+	color: var(--text);
+	margin-bottom: 8px;
+}
+
+.chatbot-result {
+	margin-top: 10px;
+	border: 1px solid var(--border);
+	border-radius: 6px;
+	padding: 12px;
+	background: #fcfdff;
+}
+
+.chatbot-meta {
+	font-size: 11px;
+	color: var(--text-3);
+	margin-bottom: 8px;
+}
+
+.chatbot-layout {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.insight-btn {
+	align-self: flex-start;
+	min-width: 132px;
+}
+
+.chart-insight {
+	margin-top: 10px;
+	margin-bottom: 10px;
+	min-height: 20px;
+}
+
+.chart-insight-btn {
+	align-self: flex-start;
 }
 
 .viz-grid {

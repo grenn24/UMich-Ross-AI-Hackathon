@@ -13,6 +13,9 @@ export default function ProfileHeader({ student }: Props) {
         .toUpperCase();
     const trendDirection = student.pulseTrend < 0 ? "Down" : "Up";
     const trendAmount = Math.abs(student.pulseTrend);
+    const predictedStress = Number.isFinite(student.predictedStress)
+        ? Number(student.predictedStress)
+        : Math.max(0, Math.min(100, Math.round((100 - student.pulseScore) * 0.8)));
 
     return (
         <div className="profile-top">
@@ -28,6 +31,7 @@ export default function ProfileHeader({ student }: Props) {
                 <div className="big-score-lbl">Pulse Score</div>
                 <div className="big-score-num">{student.pulseScore}</div>
                 <div className="big-score-trend">{trendDirection} {trendAmount} this week</div>
+                <div className="predicted-stress-chip">Predicted Stress: {predictedStress}</div>
             </div>
         </div>
     );

@@ -21,6 +21,7 @@ export interface StudentCardData {
     topSignals: string[];
     currentWeek: number;
     currentMetrics: StudentMetricSnapshot;
+    predictedStress?: number;
 }
 export interface StudentDetail extends StudentCardData {
     strongestMoment: string;
@@ -43,6 +44,59 @@ export interface OracleDraftResponse {
         strongestMomentUsed: string;
         primarySignalReferenced: string | null;
         toneCalibration: string;
+    };
+    metadata?: {
+        traceId: string;
+        provider: string;
+        model?: string | null;
+        fallbackUsed: boolean;
+        fallbackReason?: string | null;
+        latencyMs?: number;
+    };
+}
+export interface ChatbotInsightResponse {
+    studentId: string;
+    prompt: string;
+    graphData: Array<{
+        label: string;
+        value: number;
+    }>;
+    paragraph: string;
+    metadata: {
+        traceId: string;
+        provider: string;
+        model?: string | null;
+        fallbackUsed: boolean;
+        fallbackReason?: string | null;
+        latencyMs?: number;
+    };
+}
+export interface RefineDraftResponse {
+    studentId: string;
+    refinedDraft: string;
+    metadata: {
+        traceId: string;
+        provider: string;
+        model?: string | null;
+        fallbackUsed: boolean;
+        fallbackReason?: string | null;
+        latencyMs?: number;
+    };
+}
+export interface StressCauseResponse {
+    studentId: string;
+    graphData: Array<{
+        label: string;
+        value: number;
+    }>;
+    paragraph: string;
+    metadata: {
+        traceId: string;
+        provider: string;
+        model?: string | null;
+        fallbackUsed: boolean;
+        fallbackReason?: string | null;
+        latencyMs?: number;
     };
 }
 export interface CourseSummary {
