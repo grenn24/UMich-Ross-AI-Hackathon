@@ -1,18 +1,32 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import "./styles/app.css";
+import "./assets/styles/app.css";
+
+import MainLayout from "./layouts/MainLayout";
+
+import AdvisorDashboard from "./pages/AdvisorDashboard";
+import StudentProfile from "./pages/StudentProfile";
+import PulseVisualization from "./pages/PulseVisualisation";
+import OracleEngine from "./pages/OracleEngine";
+import NotFound from "./pages/NotFound";
 
 const App = () => {
-	/*
-	const { globalTheme } = useAppSelector((state) => ({
-		globalTheme: state.theme.theme,
-	}));
-	*/
 	return (
 		<BrowserRouter>
 			<Routes>
-				<Route index></Route>
-				{/*Missed routes*/}
-				<Route path="*" />
+
+				{/* Layout wrapper */}
+				<Route element={<MainLayout />}>
+
+					<Route index element={<AdvisorDashboard />} />
+					<Route path="profile" element={<StudentProfile />} />
+					<Route path="visualization" element={<PulseVisualization />} />
+					<Route path="oracle" element={<OracleEngine />} />
+
+				</Route>
+
+				{/* Missed routes */}
+				<Route path="*" element={<NotFound />} />
+
 			</Routes>
 		</BrowserRouter>
 	);

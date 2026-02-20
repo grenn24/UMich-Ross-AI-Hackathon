@@ -1,0 +1,14 @@
+interface Props {
+    number: number;
+    label: string;
+    type?: "critical" | "warning" | "stable";
+}
+
+export default function StatCard({ number, label, type }: Props) {
+    return (
+        <div className={`sstat ${type ?? ""}`}>
+            <div className="sstat-label">{label}</div>
+            <div className="sstat-count">{number}</div>
+        </div>
+    );
+}
