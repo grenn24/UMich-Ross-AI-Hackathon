@@ -1,6 +1,28 @@
+import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
+import { getStudents } from "utilities/pulseApi";
 
 const TopNav = () => {
+    const [currentWeek, setCurrentWeek] = useState<number | null>(null);
+
+    useEffect(() => {
+        let mounted = true;
+        const load = async () => {
+            try {
+                const students = await getStudents();
+                if (!mounted || students.length === 0) return;
+                const week = students.reduce((max, s) => Math.max(max, s.currentWeek), 0);
+                setCurrentWeek(week);
+            } catch {
+                setCurrentWeek(null);
+            }
+        };
+        load();
+        return () => {
+            mounted = false;
+        };
+    }, []);
+
     return (
         <nav className="topbar">
             <div className="logo">
@@ -28,7 +50,7 @@ const TopNav = () => {
                     <span className="live-dot" />
                     Live
                 </div>
-                <span>Week 8</span>
+                <span>{currentWeek ? `Week ${currentWeek}` : "Week --"}</span>
             </div>
         </nav>
     );

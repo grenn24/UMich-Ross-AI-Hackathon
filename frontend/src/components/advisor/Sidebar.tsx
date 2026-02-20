@@ -1,22 +1,32 @@
-import { useState } from "react";
 import StatCard from "./StatCard";
 import FilterButtons from "./FilterButtons";
 
-export default function Sidebar() {
-    const [filter, setFilter] = useState("all");
+interface Props {
+    filter: string;
+    onFilterChange: (value: string) => void;
+    counts: {
+        all: number;
+        critical: number;
+        high: number;
+        watch: number;
+        stable: number;
+    };
+}
+
+export default function Sidebar({ filter, onFilterChange, counts }: Props) {
 
     return (
         <aside className="sidebar">
             <div className="sidebar-section">
                 <div className="sidebar-label">Risk Summary</div>
-                <StatCard number={2} label="Critical" type="critical" />
-                <StatCard number={11} label="High Risk" type="warning" />
-                <StatCard number={387} label="Stable" type="stable" />
+                <StatCard number={counts.critical} label="Critical" type="critical" />
+                <StatCard number={counts.high} label="High Risk" type="warning" />
+                <StatCard number={counts.stable} label="Stable" type="stable" />
             </div>
 
             <div className="sidebar-section">
                 <div className="sidebar-label">Filter Queue</div>
-                <FilterButtons active={filter} onChange={setFilter} />
+                <FilterButtons active={filter} onChange={onFilterChange} counts={counts} />
             </div>
         </aside>
     );

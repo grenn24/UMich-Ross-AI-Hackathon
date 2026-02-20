@@ -1,4 +1,24 @@
-export default function TrajectoryChart() {
+import type { WeeklyDataPoint } from "types/api";
+
+interface Props {
+    weeklyData: WeeklyDataPoint[];
+}
+
+export default function TrajectoryChart({ weeklyData }: Props) {
+    const width = 820;
+    const height = 150;
+    const leftPad = 20;
+    const rightPad = 20;
+    const topPad = 15;
+    const bottomPad = 15;
+    const xSpan = width - leftPad - rightPad;
+    const ySpan = height - topPad - bottomPad;
+    const maxIndex = Math.max(1, weeklyData.length - 1);
+    const toY = (value: number) => topPad + ((100 - value) / 100) * ySpan;
+    const toX = (index: number) => leftPad + (index / maxIndex) * xSpan;
+    const pressurePoints = weeklyData.map((point, i) => `${toX(i)},${toY(point.pressure)}`).join(" ");
+    const resiliencePoints = weeklyData.map((point, i) => `${toX(i)},${toY(point.resilience)}`).join(" ");
+
     return (
         <div className="chart-panel">
             <h3 className="panel-title">14-Week Pressure vs Resilience</h3>
@@ -10,13 +30,13 @@ export default function TrajectoryChart() {
                     fill="none"
                     stroke="#d93025"
                     strokeWidth="2"
-                    points="20,110 95,104 170,98 245,90 320,78 395,62 470,48 545,39 620,31 695,26 800,22"
+                    points={pressurePoints}
                 />
                 <polyline
                     fill="none"
                     stroke="#1a7f4b"
                     strokeWidth="2"
-                    points="20,42 95,46 170,51 245,57 320,67 395,80 470,92 545,101 620,110 695,117 800,122"
+                    points={resiliencePoints}
                 />
             </svg>
         </div>
