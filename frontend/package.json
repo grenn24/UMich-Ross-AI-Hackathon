@@ -4,9 +4,9 @@
 	"version": "0.0.0",
 	"type": "module",
 	"scripts": {
-		"start": "set VITE_ENV=production&& vite --mode production",
-		"dev": "set VITE_ENV=development&& vite --mode development",
-		"build": "set VITE_ENV=production&& tsc -b && vite build --mode production",
+		"start": "VITE_ENV=production vite --mode production",
+		"dev": "VITE_ENV=development vite --mode development",
+		"build": "VITE_ENV=production tsc -b && vite build --mode production",
 		"lint": "eslint .",
 		"lint:fix": "eslint . --fix",
 		"preview": "vite preview",
