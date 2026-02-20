@@ -20,6 +20,12 @@
   --stable-border: #a8dfc0;
   --accent: #1a56db;
   --accent-light: #eef2ff;
+  --glass-bg: rgba(255, 255, 255, 0.66);
+  --glass-bg-strong: rgba(255, 255, 255, 0.74);
+  --glass-border: rgba(255, 255, 255, 0.72);
+  --glass-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
+  --space-md: 16px;
+  --space-sm: 12px;
 }
 
 * {
@@ -32,13 +38,17 @@ body {
   line-height: 1.6;
   text-rendering: optimizeLegibility;
   letter-spacing: 0.01em;
-  background: var(--bg);
+  background:
+    radial-gradient(circle at 8% 8%, rgba(154, 198, 255, 0.28) 0%, rgba(154, 198, 255, 0) 44%),
+    radial-gradient(circle at 92% 0%, rgba(192, 240, 220, 0.3) 0%, rgba(192, 240, 220, 0) 38%),
+    linear-gradient(180deg, #f8fbff 0%, #f3f7fd 42%, #eff4fa 100%);
   color: var(--text);
+  background-attachment: fixed;
 }
 
 .app-main {
   margin-top: 52px;
-  padding: 16px 18px;
+  padding: 18px 20px;
   min-height: calc(100dvh - 52px);
 }
 
@@ -54,12 +64,14 @@ body {
   left: 0;
   right: 0;
   height: 52px;
-  background: var(--white);
-  border-bottom: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.7);
+  border-bottom: 1px solid var(--glass-border);
   display: flex;
   align-items: center;
   padding: 0 20px;
   z-index: 40;
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
 }
 
 .logo {
@@ -263,21 +275,24 @@ body {
 .advisor-layout {
   display: grid;
   grid-template-columns: 240px 1fr;
-  gap: 16px;
+  gap: var(--space-md);
 }
 
 .sidebar {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: 8px;
+  background: var(--glass-bg-strong);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
   padding: 14px 12px;
   height: fit-content;
   position: sticky;
   top: 70px;
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
 }
 
 .sidebar-section {
-  margin-bottom: 18px;
+  margin-bottom: 14px;
 }
 
 .sidebar-label {
@@ -418,6 +433,7 @@ body {
 .content {
   display: flex;
   flex-direction: column;
+  gap: var(--space-sm);
 }
 
 .dashboard-search-row {
@@ -453,7 +469,7 @@ body {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  margin-bottom: 20px;
+  margin-bottom: 12px;
 }
 
 .page-title {
@@ -482,7 +498,7 @@ body {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin: 20px 0 10px;
+  margin: 14px 0 8px;
 }
 
 .section-label {
@@ -500,17 +516,20 @@ body {
 }
 
 .student-card {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: 8px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
   padding: 14px 16px;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
   display: grid;
   grid-template-columns: 1fr auto;
   gap: 16px;
   align-items: center;
   position: relative;
   overflow: hidden;
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
 }
 
 .student-card::before {
@@ -539,12 +558,12 @@ body {
 }
 
 .student-card.critical {
-  background: var(--critical-light);
+  background: rgba(254, 242, 241, 0.8);
   border-color: var(--critical-border);
 }
 
 .student-card.watch {
-  background: var(--watch-light);
+  background: rgba(254, 251, 232, 0.8);
   border-color: var(--watch-border);
 }
 
@@ -724,17 +743,20 @@ body {
 .oracle-svc,
 .insight-hero,
 .stat-box {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: 8px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
 }
 
 .profile-top {
-  padding: 20px;
+  padding: 18px;
   display: grid;
   grid-template-columns: 1fr auto;
-  gap: 20px;
-  margin-bottom: 12px;
+  gap: 16px;
+  margin-bottom: var(--space-sm);
 }
 
 .profile-id {
@@ -841,10 +863,10 @@ body {
 }
 
 .insight-hero {
-  padding: 16px;
-  margin-bottom: 12px;
-  border-color: #c7d7f9;
-  background: linear-gradient(135deg, #eef4ff, #fff);
+  padding: var(--space-md);
+  margin-bottom: var(--space-sm);
+  border-color: rgba(204, 218, 255, 0.85);
+  background: linear-gradient(135deg, rgba(236, 243, 255, 0.75), rgba(255, 255, 255, 0.72));
 }
 
 .insight-hero-text {
@@ -855,8 +877,8 @@ body {
 .two-col {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 12px;
+  gap: var(--space-md);
+  margin-bottom: var(--space-sm);
 }
 
 .panel,
@@ -864,7 +886,7 @@ body {
 .oracle-panel,
 .viz-panel,
 .oracle-svc {
-  padding: 16px;
+  padding: var(--space-md);
 }
 
 .panel-title {
@@ -1154,16 +1176,16 @@ body {
 }
 
 .email-editor-main {
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.56);
+  border: 1px solid var(--glass-border);
+  border-radius: 10px;
   padding: 10px;
 }
 
 .email-editor-side {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid var(--glass-border);
+  border-radius: 10px;
   padding: 10px;
   position: sticky;
   top: 78px;
@@ -1207,7 +1229,7 @@ body {
 .viz-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 14px;
+  gap: var(--space-md);
 }
 
 .full-col {
@@ -1217,7 +1239,7 @@ body {
 .stat-strip {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
+  gap: var(--space-md);
 }
 
 .stat-box {
@@ -1415,7 +1437,7 @@ body {
 .oracle-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 14px;
+  gap: var(--space-md);
 }
 
 .io-label {
@@ -1490,13 +1512,16 @@ body {
 }
 
 .scale-bar {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: 8px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
   padding: 16px 20px;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   margin-top: 14px;
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
 }
 
 .scale-item {
